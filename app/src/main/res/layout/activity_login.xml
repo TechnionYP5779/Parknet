@@ -1,18 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".LoginActivity">
 
     <TextView
+        android:layout_marginTop="40dp"
+        android:textSize="40sp"
+        android:text="@string/app_name"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+        <EditText
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:id="@+id/emailInput"
+            android:hint="@string/emailHint"
+            android:layout_width="300dp"
+            android:inputType="textEmailAddress"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:inputType="textPassword"
+            android:id="@+id/passwordInput"
+            android:hint="@string/passwordHint"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content" />
+    <Button
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/loginButton" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logoutButton" />
+
+
+</LinearLayout>

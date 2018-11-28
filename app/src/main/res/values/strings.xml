@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ParkNet</string>
+    <string name="emailHint">Email</string>
+    <string name="passwordHint">Password</string>
+    <string name="loginButton">Login</string>
+    <string name="logoutButton">Logout</string>
+    <string name="title_activity_main">What do you want to do?</string>
 </resources>
