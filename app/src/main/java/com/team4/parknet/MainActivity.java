@@ -16,7 +16,12 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+
+    private Button mOfferParkingBtn;
+    private Button mRentParkingBtn;
+
     private static final int LOGIN_RETURN_CODE = 1;
+    private static final int OFFER_PARKING_RETURN_CODE = 2;
     private Button mLogoutButton;
 
     @Override
@@ -26,6 +31,17 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mLogoutButton = findViewById(R.id.logoutButton);
+
+        mOfferParkingBtn = findViewById(R.id.offerParkingBtn);
+        mRentParkingBtn = findViewById(R.id.rentParkingBtn);
+
+        mOfferParkingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, OfferParkingActivity.class);
+                startActivityForResult(i, OFFER_PARKING_RETURN_CODE);
+            }
+        });
 
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override

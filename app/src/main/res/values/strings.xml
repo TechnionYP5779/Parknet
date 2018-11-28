@@ -5,4 +5,15 @@
     <string name="loginButton">Login</string>
     <string name="logoutButton">Logout</string>
     <string name="title_activity_main">What do you want to do?</string>
+    <string name="offerParkingLabel">Offer My Parking Lot</string>
+    <string name="rentParkingLabel">Rent a parking</string>
+    <string name="priceHint">Price per hour:</string>
+    <string name="addressHint">Address of parking</string>
+    <string name="sendButton">Send</string>
+    <string name="offerParkingActivityTitle">Offer your parking</string>
+    <string name="startTimeLabel">Start Time:</string>
+    <string name="chooseTime">Pick Time</string>
+    <string name="pickTime">Choose</string>
+    <string name="chooseDate">Pick Date</string>
+    <string name="endTimeLabel">End Time:</string>
 </resources>
