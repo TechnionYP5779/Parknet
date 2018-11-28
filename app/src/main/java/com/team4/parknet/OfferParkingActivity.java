@@ -3,8 +3,8 @@ package com.team4.parknet;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -13,12 +13,17 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.team4.parknet.entities.ParkingLotOffer;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 public class OfferParkingActivity extends AppCompatActivity {
 
@@ -36,17 +41,40 @@ public class OfferParkingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_offer_parking);
 
         mAuth = FirebaseAuth.getInstance();
+
+        if (mAuth.getCurrentUser() == null) {
+            setResult(RESULT_CANCELED);
+            finish();
+        }
+
         mFirestore = FirebaseFirestore.getInstance();
 
+        mAddressInput = findViewById(R.id.addressInput);
+        mPriceInput = findViewById(R.id.priceInput);
         mSendButton = findViewById(R.id.sendButton);
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new TimePickerFragment();
-                newFragment.show(getSupportFragmentManager(), "timePicker");
+                addParkingOffer();
             }
         });
+    }
+
+    private void addParkingOffer() {
+        ParkingLotOffer offer = new ParkingLotOffer(mAuth.getCurrentUser().getUid(), mAddressInput.getText().toString(),
+                Float.parseFloat(mPriceInput.getText().toString()),
+                new Date(), new Date());
+
+        mFirestore.collection("offers").add(offer)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        Toast.makeText(getApplicationContext(), "Parking Offer Added Successfully", Toast.LENGTH_LONG).show();
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
     }
 
     public static class TimePickerFragment extends DialogFragment
