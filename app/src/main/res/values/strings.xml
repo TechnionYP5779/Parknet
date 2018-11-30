@@ -16,4 +16,5 @@
     <string name="pickTime">Choose</string>
     <string name="chooseDate">Pick Date</string>
     <string name="endTimeLabel">End Time:</string>
+    <string name="book">Book Now!</string>
 </resources>
