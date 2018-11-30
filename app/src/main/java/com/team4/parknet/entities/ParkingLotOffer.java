@@ -9,6 +9,10 @@ public class ParkingLotOffer {
     Date endTime;
     String owner;
 
+    public ParkingLotOffer() {
+
+    }
+
     public ParkingLotOffer(String owner, String address, float price, Date startTime, Date endTime) {
         this.owner = owner;
         this.address = address;
@@ -23,6 +27,26 @@ public class ParkingLotOffer {
 
     public float getPrice() {
         return price;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public Date getStartTime() {
