@@ -73,8 +73,9 @@ public class OrderActivity extends AppCompatActivity {
 
                         long secs = (mParkingLotOffer.getEndTime().getTime() - mParkingLotOffer.getStartTime().getTime()) / 1000;
                         Double hours = secs / 3600.0;
+                        Double total_price = hours * mParkingLotOffer.getPrice();
                         mTotalPrice = findViewById(R.id.totalPrice);
-                        mTotalPrice.setText(hours.toString() + " $");
+                        mTotalPrice.setText(total_price.toString() + " $");
 
                         mOrderButton = findViewById(R.id.orderButton);
                         mOrderButton.setOnClickListener(new View.OnClickListener() {
