@@ -4,15 +4,20 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.LogDescriptor;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.team4.parknet.entities.Order;
 import com.team4.parknet.entities.ParkingLotOffer;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +33,8 @@ public class OrderActivity extends AppCompatActivity {
     private TextView mStartTime;
     private TextView mEndTime;
     private TextView mTotalPrice;
+    private Button mOrderButton;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +42,10 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
 
         Bundle bundle = getIntent().getExtras();
-        String id = bundle.getString("id");
+        final String id = bundle.getString("id");
 
         mDb = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         DocumentReference docRef = mDb.collection("offers").document(id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -67,6 +75,25 @@ public class OrderActivity extends AppCompatActivity {
                         Double hours = secs / 3600.0;
                         mTotalPrice = findViewById(R.id.totalPrice);
                         mTotalPrice.setText(hours.toString() + " $");
+
+                        mOrderButton = findViewById(R.id.orderButton);
+                        mOrderButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Order order = new Order(id, mParkingLotOffer.getStartTime(),
+                                        mParkingLotOffer.getEndTime(), mAuth.getCurrentUser().getUid());
+
+                                mDb.collection("orders").add(order)
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                Toast.makeText(getApplicationContext(), "Order Added Successfully", Toast.LENGTH_LONG).show();
+                                                setResult(RESULT_OK);
+                                                finish();
+                                            }
+                                        });
+                            }
+                        });
                     } else {
                         Log.d(TAG, "No such document");
                     }
