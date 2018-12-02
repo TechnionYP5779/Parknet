@@ -15,10 +15,15 @@ import android.view.ViewGroup;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.team4.parknet.entities.ParkingLotOffer;
+import com.team4.parknet.entities.TimeSlot;
 import com.team4.parknet.utils.ParkingOfferViewHolder;
+
+import java.util.Date;
+import java.util.HashMap;
 
 public class RentParkingActivity extends AppCompatActivity {
 
@@ -46,7 +51,15 @@ public class RentParkingActivity extends AppCompatActivity {
 
         mDb = FirebaseFirestore.getInstance();
 
-        Query query = mDb.collection("offers").limit(10);
+//        This is some test to prove that we can query based on vacant timeslots
+//        HashMap<String, Object> temp = new HashMap<>();
+//        temp.put("startTime", new Date(1000));
+//        temp.put("endTime", new Date(1000));
+//        temp.put("available", true);
+
+//        Query query = mDb.collection("offers").whereArrayContains("availability", temp);
+
+        Query query = mDb.collection("offers");
 
         FirestoreRecyclerOptions<ParkingLotOffer> options = new FirestoreRecyclerOptions.Builder<ParkingLotOffer>()
                 .setQuery(query, ParkingLotOffer.class)

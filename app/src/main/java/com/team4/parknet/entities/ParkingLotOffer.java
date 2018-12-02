@@ -13,7 +13,7 @@ public class ParkingLotOffer {
     Date endTime;
     String owner;
 
-    List<Boolean> availability;
+    List<TimeSlot> availability;
 
     public ParkingLotOffer() {
 
@@ -23,12 +23,14 @@ public class ParkingLotOffer {
         this.owner = owner;
         this.address = address;
         this.price = price;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = new Date(startTime.getTime() - startTime.getTime() % (3600 * 1000));
+        this.endTime = new Date(endTime.getTime() - endTime.getTime() % (3600 * 1000));
         int hours = (int)getDurationInHours();
         this.availability = new ArrayList<>(hours);
         for (int i=0; i<hours; ++i) {
-            this.availability.add(i, true);
+            Date start = new Date(this.startTime.getTime() + 1000 * 3600 * i);
+            Date end = new Date(start.getTime() + 1000 * 3600);
+            this.availability.add(i, new TimeSlot(true, start, end));
         }
     }
 
@@ -78,7 +80,11 @@ public class ParkingLotOffer {
         return owner;
     }
 
-    public List<Boolean> getAvailability() {
+    public List<TimeSlot> getAvailability() {
         return availability;
+    }
+
+    public void setAvailability(List<TimeSlot> availability) {
+        this.availability = availability;
     }
 }
