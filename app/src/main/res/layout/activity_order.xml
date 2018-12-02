@@ -82,6 +82,13 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <ListView
+        tools:listitem="@layout/time_slot_item"
+        android:id="@+id/time_slots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+
     <Button
         android:layout_marginTop="20dp"
         android:layout_gravity="center"

@@ -1,11 +1,17 @@
 package com.team4.parknet;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +25,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.team4.parknet.entities.Order;
 import com.team4.parknet.entities.ParkingLotOffer;
+import com.team4.parknet.entities.TimeSlot;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 public class OrderActivity extends AppCompatActivity {
@@ -34,6 +42,8 @@ public class OrderActivity extends AppCompatActivity {
     private TextView mEndTime;
     private TextView mTotalPrice;
     private Button mOrderButton;
+    private ListView mTimeSlotsList;
+
     private FirebaseAuth mAuth;
 
     @Override
@@ -76,6 +86,12 @@ public class OrderActivity extends AppCompatActivity {
                         mTotalPrice = findViewById(R.id.totalPrice);
                         mTotalPrice.setText(total_price.toString() + " $");
 
+                        mTimeSlotsList = findViewById(R.id.time_slots);
+
+                        TimeSlotListAdapter adapter = new TimeSlotListAdapter(OrderActivity.this, R.layout.time_slot_item, mParkingLotOffer.getAvailability());
+
+                        mTimeSlotsList.setAdapter(adapter);
+
                         mOrderButton = findViewById(R.id.orderButton);
                         mOrderButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -102,5 +118,43 @@ public class OrderActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private class TimeSlotListAdapter extends ArrayAdapter<TimeSlot> {
+
+        private Context context;
+
+        public TimeSlotListAdapter(@NonNull Context context, int resource, @NonNull List<TimeSlot> objects) {
+            super(context, resource, objects);
+            this.context = context;
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.time_slot_item, parent, false);
+
+            TimeSlot timeSlot = getItem(position);
+
+            TextView startTime = rowView.findViewById(R.id.startTime);
+            TextView endTime = rowView.findViewById(R.id.endTime);
+            Button bookBtn = rowView.findViewById(R.id.bookBtn);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.ENGLISH);
+            startTime.setText(sdf.format(timeSlot.getStartTime()));
+            endTime.setText(sdf.format(timeSlot.getEndTime()));
+
+            if (timeSlot.isAvailable()) {
+                bookBtn.setVisibility(View.VISIBLE);
+                rowView.setBackgroundColor(getResources().getColor(R.color.vacantBg));
+            } else {
+                bookBtn.setVisibility(View.INVISIBLE);
+                rowView.setBackgroundColor(getResources().getColor(R.color.busyBg));
+            }
+
+            return rowView;
+        }
     }
 }
