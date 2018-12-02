@@ -17,4 +17,7 @@
     <string name="chooseDate">Pick Date</string>
     <string name="endTimeLabel">End Time:</string>
     <string name="book">Book Now!</string>
+    <string name="orderParkingActivityTitle">order parking lot</string>
+    <string name="orderButton">Order</string>
+    <string name="totalPrice">Total Price</string>
 </resources>
