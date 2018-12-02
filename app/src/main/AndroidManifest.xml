@@ -22,7 +22,8 @@
         <activity
             android:name=".OfferParkingActivity"
             android:label="@string/offerParkingActivityTitle" />
-        <activity android:name=".RentParkingActivity"></activity>
+        <activity android:name=".RentParkingActivity" />
+        <activity android:name=".OrderActivity"></activity>
     </application>
 
 </manifest>

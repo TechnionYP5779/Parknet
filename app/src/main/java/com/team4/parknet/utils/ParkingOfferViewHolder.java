@@ -30,13 +30,23 @@ public class ParkingOfferViewHolder extends RecyclerView.ViewHolder
         mBookBtn = itemView.findViewById(R.id.bookBtn);
     }
 
-    public void bind(@NonNull ParkingLotOffer offer){
+    public void bind(@NonNull ParkingLotOffer offer, final OnBookClickCallBack cb){
         mAddressField.setText(offer.getAddress());
         mPriceField.setText(String.valueOf(offer.getPrice()) + " $/Hr");
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.ENGLISH);
         String avail = sdf.format(offer.getStartTime()) + " to " + sdf.format(offer.getEndTime());
         mAvailabilityField.setText(avail);
+
+        mBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cb.onBookClick();
+            }
+        });
     }
 
+    public interface OnBookClickCallBack {
+        void onBookClick();
+    }
 }
