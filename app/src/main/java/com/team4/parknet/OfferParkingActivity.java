@@ -62,9 +62,13 @@ public class OfferParkingActivity extends AppCompatActivity {
     }
 
     private void addParkingOffer() {
+
+        Date startTime = new Date();
+        Date endTime = new Date(startTime.getTime() + 1000 * 3600 * 5);
+
         ParkingLotOffer offer = new ParkingLotOffer(mAuth.getCurrentUser().getUid(), mAddressInput.getText().toString(),
                 Float.parseFloat(mPriceInput.getText().toString()),
-                new Date(), new Date());
+                startTime, endTime);
 
         mFirestore.collection("offers").add(offer)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

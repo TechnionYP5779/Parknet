@@ -1,6 +1,10 @@
 package com.team4.parknet.entities;
 
+import com.google.firebase.firestore.Exclude;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ParkingLotOffer {
     String address;
@@ -8,6 +12,8 @@ public class ParkingLotOffer {
     Date startTime;
     Date endTime;
     String owner;
+
+    List<Boolean> availability;
 
     public ParkingLotOffer() {
 
@@ -19,6 +25,17 @@ public class ParkingLotOffer {
         this.price = price;
         this.startTime = startTime;
         this.endTime = endTime;
+        int hours = (int)getDurationInHours();
+        this.availability = new ArrayList<>(hours);
+        for (int i=0; i<hours; ++i) {
+            this.availability.add(i, true);
+        }
+    }
+
+    @Exclude
+    public double getDurationInHours() {
+        long secs = (getEndTime().getTime() - getStartTime().getTime()) / 1000;
+        return (secs / 3600.0);
     }
 
     public String getAddress() {
@@ -59,5 +76,9 @@ public class ParkingLotOffer {
 
     public String getOwner() {
         return owner;
+    }
+
+    public List<Boolean> getAvailability() {
+        return availability;
     }
 }
