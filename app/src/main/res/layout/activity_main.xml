@@ -18,7 +18,7 @@
     <Button
         android:id="@+id/offerParkingBtn"
         android:textAllCaps="false"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:layout_width="250dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
@@ -32,6 +32,15 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/rentParkingLabel" />
+
+    <Button
+        android:id="@+id/viewOrdersBtn"
+        android:textAllCaps="false"
+        android:layout_marginTop="10dp"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/viewOrdersLabel" />
 
 
 </LinearLayout>

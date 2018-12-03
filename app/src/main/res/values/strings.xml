@@ -20,4 +20,7 @@
     <string name="orderParkingActivityTitle">order parking lot</string>
     <string name="orderButton">Order</string>
     <string name="totalPrice">Total Price</string>
+    <string name="viewOrdersLabel">View My Orders</string>
+    <string name="orderDetails">See Details</string>
+    <string name="ViewOrdersActivityLabel">My Orders</string>
 </resources>

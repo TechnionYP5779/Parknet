@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:paddingHorizontal="15dp"
+    android:paddingVertical="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="110dp">
+
+    <TextView
+        android:textSize="20sp"
+        android:id="@+id/orderLocation"
+        android:text="Namir 10, Tel Aviv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/orderPrice"
+        android:textSize="20sp"
+        android:text="50.0 $"
+        android:layout_below="@id/orderLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/orderDetailsBtn"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
+        android:text="@string/orderDetails"
+        android:layout_width="100dp"
+        android:layout_height="65dp"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

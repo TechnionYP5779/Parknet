@@ -19,10 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mOfferParkingBtn;
     private Button mRentParkingBtn;
+    private Button mViewOrdersBtn;
 
     private static final int LOGIN_RETURN_CODE = 1;
     private static final int OFFER_PARKING_RETURN_CODE = 2;
     private static final int RENT_PARKING_RETURN_CODE = 3;
+    private static final int VIEW_ORDERS_RETURN_CODE = 4;
     private Button mLogoutButton;
 
     @Override
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         mOfferParkingBtn = findViewById(R.id.offerParkingBtn);
         mRentParkingBtn = findViewById(R.id.rentParkingBtn);
+        mViewOrdersBtn = findViewById(R.id.viewOrdersBtn);
 
         mOfferParkingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, RentParkingActivity.class);
                 startActivityForResult(i, RENT_PARKING_RETURN_CODE);
+            }
+        });
+
+        mViewOrdersBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, ViewOrdersActivity.class);
+                startActivityForResult(i, VIEW_ORDERS_RETURN_CODE);
             }
         });
 
