@@ -64,25 +64,6 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:text="@string/totalPrice"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/totalPrice"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:text="8.25 $"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
     <ListView
         android:layout_weight="1"
         android:layout_marginTop="30dp"
@@ -91,6 +72,26 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
     </ListView>
+
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:text="@string/totalPrice"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/totalPrice"
+            android:layout_marginRight="5dp"
+            android:gravity="right"
+            android:layout_weight="1"
+            android:text="8.25 $"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <Button
         android:layout_marginTop="10dp"
