@@ -173,7 +173,7 @@ public class OrderActivity extends AppCompatActivity {
                     }
                     else {
                         current_price -= mParkingLotOffer.getPrice();
-                        positionsChecked.remove(position);
+                        positionsChecked.remove(Integer.valueOf(position));
                     }
                     mTotalPrice.setText(current_price.toString() + " $");
                 }
