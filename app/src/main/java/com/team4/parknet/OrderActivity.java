@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,6 +43,7 @@ public class OrderActivity extends AppCompatActivity {
     private TextView mStartTime;
     private TextView mEndTime;
     private TextView mTotalPrice;
+    private Float current_price;
     private Button mOrderButton;
     private ListView mTimeSlotsList;
 
@@ -81,10 +84,11 @@ public class OrderActivity extends AppCompatActivity {
                         mEndTime = findViewById(R.id.endTime);
                         mEndTime.setText(endTime);
 
-                        Float hours = mParkingLotOffer.getDurationInHours();
-                        Float total_price = hours * mParkingLotOffer.getPrice();
+//                        Float hours = mParkingLotOffer.getDurationInHours();
+//                        Float total_price = hours * mParkingLotOffer.getPrice();
                         mTotalPrice = findViewById(R.id.totalPrice);
-                        mTotalPrice.setText(total_price.toString() + " $");
+                        current_price = 0.0f;
+                        mTotalPrice.setText(current_price.toString() + " $");
 
                         mTimeSlotsList = findViewById(R.id.time_slots);
 
@@ -140,19 +144,32 @@ public class OrderActivity extends AppCompatActivity {
 
             TextView startTime = rowView.findViewById(R.id.startTime);
             TextView endTime = rowView.findViewById(R.id.endTime);
-            Button bookBtn = rowView.findViewById(R.id.bookBtn);
+            CheckBox checkForOrder = rowView.findViewById(R.id.checkForOrder);
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.ENGLISH);
             startTime.setText(sdf.format(timeSlot.getStartTime()));
             endTime.setText(sdf.format(timeSlot.getEndTime()));
 
             if (timeSlot.isAvailable()) {
-                bookBtn.setVisibility(View.VISIBLE);
+                checkForOrder.setVisibility(View.VISIBLE);
                 rowView.setBackgroundColor(getResources().getColor(R.color.vacantBg));
             } else {
-                bookBtn.setVisibility(View.INVISIBLE);
+                checkForOrder.setVisibility(View.INVISIBLE);
                 rowView.setBackgroundColor(getResources().getColor(R.color.busyBg));
             }
+            
+            checkForOrder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        current_price += mParkingLotOffer.getPrice();
+                    }
+                    else {
+                        current_price -= mParkingLotOffer.getPrice();
+                    }
+                    mTotalPrice.setText(current_price.toString() + " $");
+                }
+            });
 
             return rowView;
         }
