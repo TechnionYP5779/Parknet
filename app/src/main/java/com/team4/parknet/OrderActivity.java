@@ -104,8 +104,8 @@ public class OrderActivity extends AppCompatActivity {
                                 for(Integer position : positionsChecked){
                                     timesOrdered.add(mParkingLotOffer.getAvailability().get(position));
                                     mParkingLotOffer.setAvailable(position, false);
-
                                 }
+                                mDb.collection("offers").document(id).set(mParkingLotOffer);
                                 Order order = new Order(id, mParkingLotOffer.getStartTime(),
                                         mParkingLotOffer.getEndTime(), mAuth.getCurrentUser().getUid(), timesOrdered);
 
