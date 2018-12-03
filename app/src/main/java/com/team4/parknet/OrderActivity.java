@@ -30,6 +30,7 @@ import com.team4.parknet.entities.ParkingLotOffer;
 import com.team4.parknet.entities.TimeSlot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,7 +47,7 @@ public class OrderActivity extends AppCompatActivity {
     private Float current_price;
     private Button mOrderButton;
     private ListView mTimeSlotsList;
-
+    private List<Integer> positionsChecked;
     private FirebaseAuth mAuth;
 
     @Override
@@ -57,6 +58,7 @@ public class OrderActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         final String id = bundle.getString("id");
 
+        positionsChecked = new ArrayList<>();
         mDb = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
@@ -84,8 +86,6 @@ public class OrderActivity extends AppCompatActivity {
                         mEndTime = findViewById(R.id.endTime);
                         mEndTime.setText(endTime);
 
-//                        Float hours = mParkingLotOffer.getDurationInHours();
-//                        Float total_price = hours * mParkingLotOffer.getPrice();
                         mTotalPrice = findViewById(R.id.totalPrice);
                         current_price = 0.0f;
                         mTotalPrice.setText(current_price.toString() + " $");
@@ -100,8 +100,14 @@ public class OrderActivity extends AppCompatActivity {
                         mOrderButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                List<TimeSlot> timesOrdered = new ArrayList<>();
+                                for(Integer position : positionsChecked){
+                                    timesOrdered.add(mParkingLotOffer.getAvailability().get(position));
+                                    mParkingLotOffer.setAvailable(position, false);
+
+                                }
                                 Order order = new Order(id, mParkingLotOffer.getStartTime(),
-                                        mParkingLotOffer.getEndTime(), mAuth.getCurrentUser().getUid());
+                                        mParkingLotOffer.getEndTime(), mAuth.getCurrentUser().getUid(), timesOrdered);
 
                                 mDb.collection("orders").add(order)
                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -135,7 +141,7 @@ public class OrderActivity extends AppCompatActivity {
 
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.time_slot_item, parent, false);
@@ -157,15 +163,17 @@ public class OrderActivity extends AppCompatActivity {
                 checkForOrder.setVisibility(View.INVISIBLE);
                 rowView.setBackgroundColor(getResources().getColor(R.color.busyBg));
             }
-            
+
             checkForOrder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked){
                         current_price += mParkingLotOffer.getPrice();
+                        positionsChecked.add(position);
                     }
                     else {
                         current_price -= mParkingLotOffer.getPrice();
+                        positionsChecked.remove(position);
                     }
                     mTotalPrice.setText(current_price.toString() + " $");
                 }

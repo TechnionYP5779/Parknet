@@ -84,6 +84,10 @@ public class ParkingLotOffer {
         return availability;
     }
 
+    public void setAvailable(int position, Boolean avail){
+        availability.get(position).setAvailable(avail);
+    }
+
     public void setAvailability(List<TimeSlot> availability) {
         this.availability = availability;
     }

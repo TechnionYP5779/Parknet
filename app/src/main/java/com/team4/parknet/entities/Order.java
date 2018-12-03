@@ -1,21 +1,33 @@
 package com.team4.parknet.entities;
 
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     String offerId;
     Date startTime;
     Date endTime;
     String uid;
+    List<TimeSlot> timesOrdered;
+
 
     public Order() {
     }
 
-    public Order(String offerId, Date startTime, Date endTime, String uid) {
+    public Order(String offerId, Date startTime, Date endTime, String uid, List<TimeSlot> timesOrdered) {
         this.offerId = offerId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.uid = uid;
+        this.timesOrdered = timesOrdered;
+    }
+
+    public List<TimeSlot> getTimesOrdered() {
+        return timesOrdered;
+    }
+
+    public void setTimesOrdered(List<TimeSlot> timesOrdered) {
+        this.timesOrdered = timesOrdered;
     }
 
     public String getOfferId() {
