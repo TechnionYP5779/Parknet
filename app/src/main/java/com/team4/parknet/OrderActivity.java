@@ -81,8 +81,8 @@ public class OrderActivity extends AppCompatActivity {
                         mEndTime = findViewById(R.id.endTime);
                         mEndTime.setText(endTime);
 
-                        Double hours = mParkingLotOffer.getDurationInHours();
-                        Double total_price = hours * mParkingLotOffer.getPrice();
+                        Float hours = mParkingLotOffer.getDurationInHours();
+                        Float total_price = hours * mParkingLotOffer.getPrice();
                         mTotalPrice = findViewById(R.id.totalPrice);
                         mTotalPrice.setText(total_price.toString() + " $");
 

@@ -35,9 +35,9 @@ public class ParkingLotOffer {
     }
 
     @Exclude
-    public double getDurationInHours() {
+    public float getDurationInHours() {
         long secs = (getEndTime().getTime() - getStartTime().getTime()) / 1000;
-        return (secs / 3600.0);
+        return (secs / 3600.0f);
     }
 
     public String getAddress() {
