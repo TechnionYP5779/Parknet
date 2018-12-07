@@ -26,8 +26,10 @@
         <activity
             android:name=".OrderActivity"
             android:label="@string/orderParkingActivityTitle" />
-        <activity android:name=".ViewOrdersActivity"
-            android:label="@string/ViewOrdersActivityLabel"/>
+        <activity
+            android:name=".ViewOrdersActivity"
+            android:label="@string/ViewOrdersActivityLabel" />
+        <activity android:name=".SearchParkingsActivity"></activity>
     </application>
 
 </manifest>
