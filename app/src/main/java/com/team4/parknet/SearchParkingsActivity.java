@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.team4.parknet.utils.MyDatePickerFragment;
@@ -21,6 +22,7 @@ public class SearchParkingsActivity extends AppCompatActivity implements
     private TextView mChooseStartTime;
     private TextView mChooseEndTime;
     private Button mSendButton;
+    private EditText mAddress;
 
     private TextView mChooseStartDate;
     private TextView mChooseEndDate;
@@ -49,6 +51,8 @@ public class SearchParkingsActivity extends AppCompatActivity implements
         mChooseEndDate = findViewById(R.id.chooseEndDate);
 
         mSendButton = findViewById(R.id.sendButton);
+
+        mAddress = findViewById((R.id.addressInput));
 
         mChooseStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +90,8 @@ public class SearchParkingsActivity extends AppCompatActivity implements
                 //TODO: implement intent.
                 Date startDate = getDate(mStartYear, mStartMonth, mStartDay, mStartHour);
                 Date endDate = getDate(mEndYear, mEndMonth, mEndDay, mEndHour);
-                Log.d(TAG, "onClick: " + Long.valueOf((endDate.getTime() - startDate.getTime())/3600000).toString());
+                String address = mAddress.getText().toString();
+                Log.d(TAG, "onClick: " + address);
             }
         });
     }

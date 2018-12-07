@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
         mOfferParkingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent i = new Intent(MainActivity.this, OfferParkingActivity.class);
-                Intent i = new Intent(MainActivity.this, SearchParkingsActivity.class);
+                Intent i = new Intent(MainActivity.this, OfferParkingActivity.class);
                 startActivityForResult(i, OFFER_PARKING_RETURN_CODE);
             }
         });
@@ -51,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         mRentParkingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, RentParkingActivity.class);
+                //Intent i = new Intent(MainActivity.this, RentParkingActivity.class);
+                Intent i = new Intent(MainActivity.this, SearchParkingsActivity.class);
                 startActivityForResult(i, RENT_PARKING_RETURN_CODE);
             }
         });
