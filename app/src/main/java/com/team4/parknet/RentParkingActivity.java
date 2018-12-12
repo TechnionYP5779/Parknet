@@ -22,6 +22,7 @@ import com.team4.parknet.entities.ParkingLotOffer;
 import com.team4.parknet.entities.TimeSlot;
 import com.team4.parknet.utils.ParkingOfferViewHolder;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -29,6 +30,7 @@ public class RentParkingActivity extends AppCompatActivity {
 
     private static final String TAG = "RentParkingActivity";
     private static final int ORDER_RETURN_CODE = 1;
+    public static final int MILLISECS_TO_HOURS = 3600000;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDb;
 
@@ -51,15 +53,28 @@ public class RentParkingActivity extends AppCompatActivity {
 
         mDb = FirebaseFirestore.getInstance();
 
+        Bundle bundle = getIntent().getExtras();
+        Date startDate = (Date)bundle.get("start-date");
+        Date endDate = (Date)bundle.get("end-date");
+        String address = bundle.getString("address");
+
 //        This is some test to prove that we can query based on vacant timeslots
-//        HashMap<String, Object> temp = new HashMap<>();
-//        temp.put("startTime", new Date(1000));
-//        temp.put("endTime", new Date(1000));
-//        temp.put("available", true);
-
-//        Query query = mDb.collection("offers").whereArrayContains("availability", temp);
-
         Query query = mDb.collection("offers");
+
+//        HashMap<String, Object> temp = new HashMap<>();
+//        Date currDate1 = startDate;
+//        Date currDate2;
+//        for(int i = 0; i <= (endDate.getTime() - startDate.getTime())/ MILLISECS_TO_HOURS; ++i){
+//            Calendar cal = Calendar.getInstance(); // creates calendar
+//            cal.setTime(currDate1);
+//            cal.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
+//            currDate2 = cal.getTime();
+//            temp.put("startTime", currDate1);
+//            temp.put("endTime", currDate2);
+//            temp.put("available", true);
+//            query = query.whereArrayContains("availability", temp);
+//            currDate1 = currDate2;
+//        }
 
         FirestoreRecyclerOptions<ParkingLotOffer> options = new FirestoreRecyclerOptions.Builder<ParkingLotOffer>()
                 .setQuery(query, ParkingLotOffer.class)
@@ -101,5 +116,17 @@ public class RentParkingActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+    public static Date getDate(int year, int month, int day, int hour) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 }

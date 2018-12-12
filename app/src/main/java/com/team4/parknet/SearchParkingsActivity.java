@@ -1,5 +1,6 @@
 package com.team4.parknet;
 
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class SearchParkingsActivity extends AppCompatActivity implements
         MyTimePickerFragment.OnCallbackReceived, MyDatePickerFragment.OnCallbackReceived {
 
     private static final String TAG = "SearchParkingsActivity";
+    private static final int RENT_PARKING_RETURN_CODE = 0;
     private TextView mChooseStartTime;
     private TextView mChooseEndTime;
     private Button mSendButton;
@@ -91,7 +93,12 @@ public class SearchParkingsActivity extends AppCompatActivity implements
                 Date startDate = getDate(mStartYear, mStartMonth, mStartDay, mStartHour);
                 Date endDate = getDate(mEndYear, mEndMonth, mEndDay, mEndHour);
                 String address = mAddress.getText().toString();
-                Log.d(TAG, "onClick: " + address);
+
+                Intent i = new Intent(SearchParkingsActivity.this, RentParkingActivity.class);
+                i.putExtra("address", address);
+                i.putExtra("start-date", startDate);
+                i.putExtra("end-date", endDate);
+                startActivityForResult(i, RENT_PARKING_RETURN_CODE);
             }
         });
     }
