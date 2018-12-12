@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.team4.parknet.utils.MyDatePickerFragment;
 import com.team4.parknet.utils.MyTimePickerFragment;
@@ -89,7 +90,16 @@ public class SearchParkingsActivity extends AppCompatActivity implements
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: implement intent.
+                if(mStartDay == null || mStartHour == null){
+                    Toast.makeText(SearchParkingsActivity.this, "You need to choose start date", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(mEndDay == null || mEndHour == null){
+                    Toast.makeText(SearchParkingsActivity.this, "You need to choose end date", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Date startDate = getDate(mStartYear, mStartMonth, mStartDay, mStartHour);
                 Date endDate = getDate(mEndYear, mEndMonth, mEndDay, mEndHour);
                 String address = mAddress.getText().toString();
