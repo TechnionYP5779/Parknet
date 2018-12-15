@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
         mOfferParkingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, OfferParkingActivity.class);
+//                Intent i = new Intent(MainActivity.this, OfferParkingActivity.class);
+//                startActivityForResult(i, OFFER_PARKING_RETURN_CODE);
+                Intent i = new Intent(MainActivity.this, MapsActivity.class);
                 startActivityForResult(i, OFFER_PARKING_RETURN_CODE);
             }
         });

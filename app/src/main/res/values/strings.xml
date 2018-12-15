@@ -23,4 +23,7 @@
     <string name="viewOrdersLabel">View My Orders</string>
     <string name="orderDetails">See Details</string>
     <string name="ViewOrdersActivityLabel">My Orders</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="map">Map</string>
+    <string name="search_hint">Enter Address, City or Zip Code</string>
 </resources>

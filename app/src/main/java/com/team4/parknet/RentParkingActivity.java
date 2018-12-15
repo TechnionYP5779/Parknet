@@ -14,10 +14,16 @@ import android.view.ViewGroup;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.team4.parknet.entities.ParkingLotOffer;
 import com.team4.parknet.entities.TimeSlot;
 import com.team4.parknet.utils.ParkingOfferViewHolder;
@@ -25,6 +31,7 @@ import com.team4.parknet.utils.ParkingOfferViewHolder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class RentParkingActivity extends AppCompatActivity {
 
@@ -33,6 +40,7 @@ public class RentParkingActivity extends AppCompatActivity {
     public static final int MILLISECS_TO_HOURS = 3600000;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDb;
+    private FirebaseFunctions mFunctions;
 
     RecyclerView mOfferRecyclerView;
     FirestoreRecyclerAdapter adapter;
@@ -53,11 +61,20 @@ public class RentParkingActivity extends AppCompatActivity {
 
         mDb = FirebaseFirestore.getInstance();
 
+        mFunctions = FirebaseFunctions.getInstance();
+        //testCloudFunction();
+
         Bundle bundle = getIntent().getExtras();
         Date startDate = (Date)bundle.get("start-date");
         Date endDate = (Date)bundle.get("end-date");
         String address = bundle.getString("address");
 
+        Map<String, Object> data = new HashMap<>();
+        data.put("startDate", startDate);
+        data.put("endDate", endDate);
+        data.put("address", address);
+
+        testCloudFunction(data);
 //        This is some test to prove that we can query based on vacant timeslots
         Query query = mDb.collection("offers");
 
@@ -128,5 +145,58 @@ public class RentParkingActivity extends AppCompatActivity {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
+    }
+
+    private Task<String> helloWorld(){
+        Map<String, Object> data = new HashMap<>();
+
+        return mFunctions
+                .getHttpsCallable("helloWorld")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        String result = (String)((Map)task.getResult().getData()).get("text");
+                        return result;
+                    }
+                });
+    }
+
+    private Task<Date> queryTest(Map<String, Object> data){
+
+        return mFunctions
+                .getHttpsCallable("startDate")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, Date>() {
+                    @Override
+                    public Date then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        Date result = (Date)((Map)task.getResult().getData()).get("text");
+                        return result;
+                    }
+                });
+    }
+
+
+
+    private void testCloudFunction(Map<String, Object> data){
+        queryTest(data).addOnCompleteListener(new OnCompleteListener<Date>() {
+            @Override
+            public void onComplete(@NonNull Task<Date> task) {
+                if(task.isSuccessful()){
+                    Date date = task.getResult();
+                    Log.d(TAG, "onComplete: " + date.toString());
+                }
+                else{
+                    Exception e = task.getException();
+                    Log.d(TAG, "onComplete: " + e.getMessage());
+                }
+            }
+        });
     }
 }
