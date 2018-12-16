@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -80,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int OFFER_PARKING_RETURN_CODE = 2;
     private static final int ORDER_RETURN_CODE = 3;
+    public static final int RADIUS = 10;
 
     //widgets
     private AutoCompleteTextView mSearchText;
@@ -295,26 +297,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (task.isSuccessful()) {
                             task.getResult().getDocuments().forEach(new Consumer<DocumentSnapshot>() {
                                 @Override
-                                public void accept(DocumentSnapshot documentSnapshot) {
-                                    GeoPoint loc = (GeoPoint) documentSnapshot.get("address");
-                                    Double price = documentSnapshot.getDouble("price");
-                                    if (calcDistance(loc.getLatitude(), 32.7787175,
-                                            loc.getLongitude(), 35.01925390625) < 10) {
-                                        IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
-                                        iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
-                                        iconGenerator.setRotation(90);
-                                        iconGenerator.setContentRotation(-90);
-                                        Bitmap iconBitmap = iconGenerator.makeIcon("Rent "+(price.floatValue())+"$/Hr");
+                                public void accept(final DocumentSnapshot documentSnapshot) {
+                                    final GeoPoint loc = (GeoPoint) documentSnapshot.get("address");
+                                    final Double price = documentSnapshot.getDouble("price");
+                                    LocationServices.getFusedLocationProviderClient(MapsActivity.this).getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Location> task) {
+                                            Location currLoc = task.getResult();
+                                            if (calcDistance(loc.getLatitude(), currLoc.getLatitude(),
+                                                    loc.getLongitude(), currLoc.getLongitude()) < RADIUS) {
+                                                IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
+                                                iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+                                                iconGenerator.setRotation(90);
+                                                iconGenerator.setContentRotation(-90);
+                                                Bitmap iconBitmap = iconGenerator.makeIcon("Rent "+(price.floatValue())+"$/Hr");
 
 
-                                        MarkerOptions options = new MarkerOptions()
-                                                .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                                                .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
-                                                .title("For Rent")
-                                                .snippet(documentSnapshot.getId());
+                                                MarkerOptions options = new MarkerOptions()
+                                                        .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
+                                                        .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
+                                                        .title("For Rent")
+                                                        .snippet(documentSnapshot.getId());
 
-                                        mMap.addMarker(options);
-                                    }
+                                                mMap.addMarker(options);
+                                        }
+                                    }});
                                 }
                             });
                         }
