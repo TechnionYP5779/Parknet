@@ -230,7 +230,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .setFilter(typeFilter)
                             .build(MapsActivity.this);
                     startActivityForResult(builder.build(MapsActivity.this), PLACE_PICKER_REQUEST);
-                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                    //startActivityForResult(intent, PLACE_PICKER_REQUEST);
 
                 } catch (GooglePlayServicesRepairableException e) {
                     Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage() );
