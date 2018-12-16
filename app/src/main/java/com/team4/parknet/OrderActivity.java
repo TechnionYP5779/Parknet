@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +37,6 @@ public class OrderActivity extends AppCompatActivity {
     private static final String TAG = "OrderActivity";
     private FirebaseFirestore mDb;
     private ParkingLotOffer mParkingLotOffer;
-    private TextView mAddress;
     private TextView mPricePerHour;
     private TextView mStartTime;
     private TextView mEndTime;
@@ -46,6 +46,7 @@ public class OrderActivity extends AppCompatActivity {
     private ListView mTimeSlotsList;
     private List<Integer> positionsChecked;
     private FirebaseAuth mAuth;
+    private LatLng mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class OrderActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         final String id = bundle.getString("id");
-
+        mLocation = (LatLng) bundle.get("location");
         positionsChecked = new ArrayList<>();
         mDb = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -67,9 +68,6 @@ public class OrderActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         mParkingLotOffer = task.getResult().toObject(ParkingLotOffer.class);
-
-//                        mAddress = findViewById(R.id.address);
-//                        mAddress.setText(mParkingLotOffer.getAddress());
 
                         mPricePerHour = findViewById(R.id.pricePerHour);
                         mPricePerHour.setText(mParkingLotOffer.getPrice() + " $/Hr");
@@ -98,7 +96,7 @@ public class OrderActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 List<TimeSlot> timesOrdered = new ArrayList<>();
-                                for(Integer position : positionsChecked){
+                                for (Integer position : positionsChecked) {
                                     timesOrdered.add(mParkingLotOffer.getAvailability().get(position));
                                     mParkingLotOffer.setAvailable(position, false);
                                 }
@@ -164,11 +162,10 @@ public class OrderActivity extends AppCompatActivity {
             checkForOrder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         current_price += mParkingLotOffer.getPrice();
                         positionsChecked.add(position);
-                    }
-                    else {
+                    } else {
                         current_price -= mParkingLotOffer.getPrice();
                         positionsChecked.remove(Integer.valueOf(position));
                     }

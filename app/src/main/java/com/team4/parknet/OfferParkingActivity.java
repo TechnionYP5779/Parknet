@@ -60,6 +60,18 @@ public class OfferParkingActivity extends AppCompatActivity implements
     private Integer mStartDay;
     private Integer mEndDay;
 
+    public static Date getDate(int year, int month, int day, int hour) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,12 +131,12 @@ public class OfferParkingActivity extends AppCompatActivity implements
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mStartDay == null || mStartHour == null){
+                if (mStartDay == null || mStartHour == null) {
                     Toast.makeText(OfferParkingActivity.this, "You need to choose start date", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(mEndDay == null || mEndHour == null){
+                if (mEndDay == null || mEndHour == null) {
                     Toast.makeText(OfferParkingActivity.this, "You need to choose end date", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -152,6 +164,64 @@ public class OfferParkingActivity extends AppCompatActivity implements
                         finish();
                     }
                 });
+    }
+
+    public void showTimePickerDialog(String startOrEnd) {
+        DialogFragment newFragment = new MyTimePickerFragment();
+        Bundle b = new Bundle();
+        b.putString("start-or-end", startOrEnd);
+        newFragment.setArguments(b);
+        newFragment.show(getSupportFragmentManager(), "time picker");
+    }
+
+    public void showDatePickerDialog(String startOrEnd) {
+        DialogFragment newFragment = new MyDatePickerFragment();
+        Bundle b = new Bundle();
+        b.putString("start-or-end", startOrEnd);
+        newFragment.setArguments(b);
+        newFragment.show(getSupportFragmentManager(), "date picker");
+    }
+
+    public void setStartTime(int startHour) {
+        mStartHour = startHour;
+    }
+
+    public void setStartDate(int startYear, int startMonth, int startDay) {
+        mStartYear = startYear;
+        mStartMonth = startMonth;
+        mStartDay = startDay;
+    }
+
+    public void setEndDate(int endYear, int endMonth, int endDay) {
+        mEndYear = endYear;
+        mEndMonth = endMonth;
+        mEndDay = endDay;
+    }
+
+    public void setEndTime(int endHour) {
+        mEndHour = endHour;
+    }
+
+    @Override
+    public void UpdateTime(String startOrEnd, Integer hour) {
+        if (startOrEnd.equals("start")) {
+            setStartTime(hour);
+            mChooseStartTime.setText(mStartHour.toString() + ":00");
+        } else {
+            setEndTime(hour);
+            mChooseEndTime.setText(mEndHour.toString() + ":00");
+        }
+    }
+
+    @Override
+    public void UpdateDate(String startOrEnd, Integer year, Integer month, Integer dayOfMonth) {
+        if (startOrEnd.equals("start")) {
+            setStartDate(year, month, dayOfMonth);
+            mChooseStartDate.setText(mStartDay.toString() + "/" + mStartMonth.toString() + "/" + mStartYear.toString());
+        } else {
+            setEndDate(year, month, dayOfMonth);
+            mChooseEndDate.setText(mEndDay.toString() + "/" + mEndMonth.toString() + "/" + mEndYear.toString());
+        }
     }
 
     public static class TimePickerFragment extends DialogFragment
@@ -192,78 +262,5 @@ public class OfferParkingActivity extends AppCompatActivity implements
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
         }
-    }
-
-
-    public void showTimePickerDialog(String startOrEnd) {
-        DialogFragment newFragment = new MyTimePickerFragment();
-        Bundle b = new Bundle();
-        b.putString("start-or-end", startOrEnd);
-        newFragment.setArguments(b);
-        newFragment.show(getSupportFragmentManager(), "time picker");
-    }
-
-    public void showDatePickerDialog(String startOrEnd) {
-        DialogFragment newFragment = new MyDatePickerFragment();
-        Bundle b = new Bundle();
-        b.putString("start-or-end", startOrEnd);
-        newFragment.setArguments(b);
-        newFragment.show(getSupportFragmentManager(), "date picker");
-    }
-
-
-
-    public void setStartTime(int startHour){
-        mStartHour = startHour;
-    }
-
-    public void setStartDate(int startYear, int startMonth, int startDay){
-        mStartYear = startYear;
-        mStartMonth = startMonth;
-        mStartDay = startDay;
-    }
-
-    public void setEndDate(int endYear, int endMonth, int endDay){
-        mEndYear = endYear;
-        mEndMonth = endMonth;
-        mEndDay = endDay;
-    }
-
-    public void setEndTime(int endHour){
-        mEndHour = endHour;
-    }
-
-    @Override
-    public void UpdateTime(String startOrEnd, Integer hour) {
-        if(startOrEnd.equals("start")){
-            setStartTime(hour);
-            mChooseStartTime.setText(mStartHour.toString() +":00");
-        }else{
-            setEndTime(hour);
-            mChooseEndTime.setText(mEndHour.toString()+":00");
-        }
-    }
-
-    @Override
-    public void UpdateDate(String startOrEnd, Integer year, Integer month, Integer dayOfMonth) {
-        if(startOrEnd.equals("start")){
-            setStartDate(year, month, dayOfMonth);
-            mChooseStartDate.setText(mStartDay.toString() + "/" + mStartMonth.toString() + "/" + mStartYear.toString());
-        }else{
-            setEndDate(year, month, dayOfMonth);
-            mChooseEndDate.setText(mEndDay.toString() + "/" + mEndMonth.toString() + "/" + mEndYear.toString());
-        }
-    }
-
-    public static Date getDate(int year, int month, int day, int hour) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DAY_OF_MONTH, day);
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
     }
 }

@@ -9,8 +9,15 @@ import android.widget.DatePicker;
 import java.util.Calendar;
 
 public class MyDatePickerFragment extends DialogFragment {
-    private String mStartOrEnd;
     OnCallbackReceived mCallback;
+    private String mStartOrEnd;
+    private DatePickerDialog.OnDateSetListener dateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    mCallback.UpdateDate(mStartOrEnd, year, month, dayOfMonth);
+                }
+            };
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -24,14 +31,6 @@ public class MyDatePickerFragment extends DialogFragment {
         mStartOrEnd = getArguments().getString("start-or-end");
         return new DatePickerDialog(getActivity(), dateSetListener, year, month, dayOfMonth);
     }
-
-    private DatePickerDialog.OnDateSetListener dateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    mCallback.UpdateDate(mStartOrEnd, year, month, dayOfMonth);
-                }
-            };
 
     public interface OnCallbackReceived {
         void UpdateDate(String startOrEnd, Integer year, Integer month, Integer dayOfMonth);

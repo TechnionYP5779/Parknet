@@ -31,15 +31,26 @@ import java.util.Map;
 
 public class RentParkingActivity extends AppCompatActivity {
 
+    public static final int MILLISECS_TO_HOURS = 3600000;
     private static final String TAG = "RentParkingActivity";
     private static final int ORDER_RETURN_CODE = 1;
-    public static final int MILLISECS_TO_HOURS = 3600000;
+    RecyclerView mOfferRecyclerView;
+    FirestoreRecyclerAdapter adapter;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDb;
     private FirebaseFunctions mFunctions;
 
-    RecyclerView mOfferRecyclerView;
-    FirestoreRecyclerAdapter adapter;
+    public static Date getDate(int year, int month, int day, int hour) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +72,15 @@ public class RentParkingActivity extends AppCompatActivity {
         //testCloudFunction();
 
         Bundle bundle = getIntent().getExtras();
-        Date startDate = (Date)bundle.get("start-date");
-        Date endDate = (Date)bundle.get("end-date");
-        String address = bundle.getString("address");
+        Date startDate = (Date) bundle.get("start-date");
+        Date endDate = (Date) bundle.get("end-date");
+        //String address = bundle.getString("address");
 
         Map<String, Object> data = new HashMap<>();
-        data.put("startDate", startDate);
-        data.put("endDate", endDate);
-        data.put("address", address);
+//        data.put("startDate", startDate);
+//        data.put("endDate", endDate);
+        data.put("lat", 32.7787175);
+        data.put("long", 35.01925390625);
 
         testCloudFunction(data);
 //        This is some test to prove that we can query based on vacant timeslots
@@ -131,19 +143,7 @@ public class RentParkingActivity extends AppCompatActivity {
         adapter.stopListening();
     }
 
-    public static Date getDate(int year, int month, int day, int hour) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DAY_OF_MONTH, day);
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
-    }
-
-    private Task<String> helloWorld(){
+    private Task<String> helloWorld() {
         Map<String, Object> data = new HashMap<>();
 
         return mFunctions
@@ -155,42 +155,40 @@ public class RentParkingActivity extends AppCompatActivity {
                         // This continuation runs on either success or failure, but if the task
                         // has failed then getResult() will throw an Exception which will be
                         // propagated down.
-                        String result = (String)((Map)task.getResult().getData()).get("text");
+                        String result = (String) ((Map) task.getResult().getData()).get("text");
                         return result;
                     }
                 });
     }
 
-    private Task<Date> queryTest(Map<String, Object> data){
+    private Task<Object> queryTest(Map<String, Object> data) {
 
         return mFunctions
-                .getHttpsCallable("startDate")
+                .getHttpsCallable("queryTest")
                 .call(data)
-                .continueWith(new Continuation<HttpsCallableResult, Date>() {
+                .continueWith(new Continuation<HttpsCallableResult, Object>() {
                     @Override
-                    public Date then(@NonNull Task<HttpsCallableResult> task) {
+                    public Object then(@NonNull Task<HttpsCallableResult> task) {
                         // This continuation runs on either success or failure, but if the task
                         // has failed then getResult() will throw an Exception which will be
                         // propagated down.
-                        Date result = (Date)((Map)task.getResult().getData()).get("text");
+                        Object result = task.getResult().getData();
                         return result;
                     }
                 });
     }
 
 
-
-    private void testCloudFunction(Map<String, Object> data){
-        queryTest(data).addOnCompleteListener(new OnCompleteListener<Date>() {
+    private void testCloudFunction(Map<String, Object> data) {
+        queryTest(data).addOnCompleteListener(new OnCompleteListener<Object>() {
             @Override
-            public void onComplete(@NonNull Task<Date> task) {
-                if(task.isSuccessful()){
-                    Date date = task.getResult();
-                    Log.d(TAG, "onComplete: " + date.toString());
-                }
-                else{
+            public void onComplete(@NonNull Task<Object> task) {
+                if (task.isSuccessful()) {
+                    Object date = task.getResult();
+                    Log.d(TAG, "onComplete1: " + date.toString());
+                } else {
                     Exception e = task.getException();
-                    Log.d(TAG, "onComplete: " + e.getMessage());
+                    Log.d(TAG, "onComplete2: " + e.getMessage());
                 }
             }
         });

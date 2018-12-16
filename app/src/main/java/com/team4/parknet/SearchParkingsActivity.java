@@ -41,6 +41,18 @@ public class SearchParkingsActivity extends AppCompatActivity implements
     private Integer mStartDay;
     private Integer mEndDay;
 
+    public static Date getDate(int year, int month, int day, int hour) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,22 +101,22 @@ public class SearchParkingsActivity extends AppCompatActivity implements
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mStartDay == null || mStartHour == null){
+                if (mStartDay == null || mStartHour == null) {
                     Toast.makeText(SearchParkingsActivity.this, "You need to choose start date", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(mEndDay == null || mEndHour == null){
+                if (mEndDay == null || mEndHour == null) {
                     Toast.makeText(SearchParkingsActivity.this, "You need to choose end date", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 Date startDate = getDate(mStartYear, mStartMonth, mStartDay, mStartHour);
                 Date endDate = getDate(mEndYear, mEndMonth, mEndDay, mEndHour);
-                String address = mAddress.getText().toString();
+                //String address = mAddress.getText().toString();
 
                 Intent i = new Intent(SearchParkingsActivity.this, RentParkingActivity.class);
-                i.putExtra("address", address);
+                //i.putExtra("address", address);
                 i.putExtra("start-date", startDate);
                 i.putExtra("end-date", endDate);
                 startActivityForResult(i, RENT_PARKING_RETURN_CODE);
@@ -128,59 +140,45 @@ public class SearchParkingsActivity extends AppCompatActivity implements
         newFragment.show(getSupportFragmentManager(), "date picker");
     }
 
-
-
-    public void setStartTime(int startHour){
+    public void setStartTime(int startHour) {
         mStartHour = startHour;
     }
 
-    public void setStartDate(int startYear, int startMonth, int startDay){
+    public void setStartDate(int startYear, int startMonth, int startDay) {
         mStartYear = startYear;
         mStartMonth = startMonth;
         mStartDay = startDay;
     }
 
-    public void setEndDate(int endYear, int endMonth, int endDay){
+    public void setEndDate(int endYear, int endMonth, int endDay) {
         mEndYear = endYear;
         mEndMonth = endMonth;
         mEndDay = endDay;
     }
 
-    public void setEndTime(int endHour){
+    public void setEndTime(int endHour) {
         mEndHour = endHour;
     }
 
     @Override
     public void UpdateTime(String startOrEnd, Integer hour) {
-        if(startOrEnd.equals("start")){
+        if (startOrEnd.equals("start")) {
             setStartTime(hour);
-            mChooseStartTime.setText(mStartHour.toString() +":00");
-        }else{
+            mChooseStartTime.setText(mStartHour.toString() + ":00");
+        } else {
             setEndTime(hour);
-            mChooseEndTime.setText(mEndHour.toString()+":00");
+            mChooseEndTime.setText(mEndHour.toString() + ":00");
         }
     }
 
     @Override
     public void UpdateDate(String startOrEnd, Integer year, Integer month, Integer dayOfMonth) {
-        if(startOrEnd.equals("start")){
+        if (startOrEnd.equals("start")) {
             setStartDate(year, month, dayOfMonth);
             mChooseStartDate.setText(mStartDay.toString() + "/" + mStartMonth.toString() + "/" + mStartYear.toString());
-        }else{
+        } else {
             setEndDate(year, month, dayOfMonth);
             mChooseEndDate.setText(mEndDay.toString() + "/" + mEndMonth.toString() + "/" + mEndYear.toString());
         }
-    }
-
-    public static Date getDate(int year, int month, int day, int hour) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DAY_OF_MONTH, day);
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
     }
 }

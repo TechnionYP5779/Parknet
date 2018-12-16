@@ -19,11 +19,10 @@ import com.team4.parknet.utils.OrderViewHolder;
 
 public class ViewOrdersActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore mDb;
-
     RecyclerView mOrderRecyclerView;
     FirestoreRecyclerAdapter adapter;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

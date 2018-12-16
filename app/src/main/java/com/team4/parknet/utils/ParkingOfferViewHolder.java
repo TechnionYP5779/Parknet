@@ -12,8 +12,7 @@ import com.team4.parknet.entities.ParkingLotOffer;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class ParkingOfferViewHolder extends RecyclerView.ViewHolder
-{
+public class ParkingOfferViewHolder extends RecyclerView.ViewHolder {
     private TextView mAddressField;
     private TextView mPriceField;
     private TextView mAvailabilityField;
@@ -27,7 +26,7 @@ public class ParkingOfferViewHolder extends RecyclerView.ViewHolder
         mBookBtn = itemView.findViewById(R.id.bookBtn);
     }
 
-    public void bind(@NonNull ParkingLotOffer offer, final OnBookClickCallBack cb){
+    public void bind(@NonNull ParkingLotOffer offer, final OnBookClickCallBack cb) {
         //mAddressField.setText(offer.getAddress());
         mPriceField.setText(String.valueOf(offer.getPrice()) + " $/Hr");
 

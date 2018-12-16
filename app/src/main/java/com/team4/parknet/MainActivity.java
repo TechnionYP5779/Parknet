@@ -12,16 +12,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-
-    private Button mOfferParkingBtn;
-    private Button mRentParkingBtn;
-    private Button mViewOrdersBtn;
-
     private static final int LOGIN_RETURN_CODE = 1;
     private static final int OFFER_PARKING_RETURN_CODE = 2;
     private static final int RENT_PARKING_RETURN_CODE = 3;
     private static final int VIEW_ORDERS_RETURN_CODE = 4;
+    private FirebaseAuth mAuth;
+    private Button mOfferParkingBtn;
+    private Button mRentParkingBtn;
+    private Button mViewOrdersBtn;
     private Button mLogoutButton;
 
     @Override
@@ -97,6 +95,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void afterLogin() {
-        Toast.makeText(this, "Welcome " + mAuth.getCurrentUser().getEmail(),Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Welcome " + mAuth.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
     }
 }

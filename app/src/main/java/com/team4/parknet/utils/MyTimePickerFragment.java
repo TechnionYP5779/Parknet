@@ -10,8 +10,14 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 public class MyTimePickerFragment extends DialogFragment {
-    private String mStartOrEnd;
     OnCallbackReceived mCallback;
+    private String mStartOrEnd;
+    private TimePickerDialog.OnTimeSetListener timeSetListener =
+            new TimePickerDialog.OnTimeSetListener() {
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    mCallback.UpdateTime(mStartOrEnd, hourOfDay);
+                }
+            };
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -25,13 +31,6 @@ public class MyTimePickerFragment extends DialogFragment {
         return new TimePickerDialog(getActivity(), timeSetListener, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
     }
-
-    private TimePickerDialog.OnTimeSetListener timeSetListener =
-            new TimePickerDialog.OnTimeSetListener() {
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    mCallback.UpdateTime(mStartOrEnd, hourOfDay);
-                }
-            };
 
     public interface OnCallbackReceived {
         void UpdateTime(String startOrEnd, Integer hour);

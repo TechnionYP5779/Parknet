@@ -8,14 +8,6 @@
     android:padding="10dp"
     tools:context=".OrderActivity">
 
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:id="@+id/address"
-        android:textSize="20sp"
-        android:text="Namir 10, Tel Aviv"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_marginTop="20dp"

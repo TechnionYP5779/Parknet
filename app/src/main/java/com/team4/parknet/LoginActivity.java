@@ -14,13 +14,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = "LoginActivity";
     private Button mLoginButton;
     private Button mLogoutButton;
     private EditText mEmailInput;
     private EditText mPasswordInput;
     private FirebaseAuth mAuth;
-
-    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

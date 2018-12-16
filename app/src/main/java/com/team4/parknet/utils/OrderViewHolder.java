@@ -32,7 +32,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder {
         mOrderDetailsBtn = itemView.findViewById(R.id.orderDetailsBtn);
     }
 
-    public void bind(@NonNull final Order order, FirebaseFirestore mDb){
+    public void bind(@NonNull final Order order, FirebaseFirestore mDb) {
         DocumentReference docRef = mDb.collection("offers").document(order.getOfferId());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -45,7 +45,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder {
 
                         Float price = order.getTimesOrdered().size() * mOfferOfOrder.getPrice();
                         mPriceField.setText(price.toString());
-                    } else{
+                    } else {
                         Log.d(TAG, "No such document");
                     }
                 } else {
