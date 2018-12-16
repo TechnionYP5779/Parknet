@@ -3,6 +3,7 @@ package com.team4.parknet;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -57,6 +58,8 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.ui.BubbleIconFactory;
+import com.google.maps.android.ui.IconGenerator;
 import com.team4.parknet.models.PlaceInfo;
 
 import java.io.IOException;
@@ -294,11 +297,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 @Override
                                 public void accept(DocumentSnapshot documentSnapshot) {
                                     GeoPoint loc = (GeoPoint) documentSnapshot.get("address");
+                                    Double price = documentSnapshot.getDouble("price");
                                     if (calcDistance(loc.getLatitude(), 32.7787175,
                                             loc.getLongitude(), 35.01925390625) < 10) {
+                                        IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
+                                        iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+                                        iconGenerator.setRotation(90);
+                                        iconGenerator.setContentRotation(-90);
+                                        Bitmap iconBitmap = iconGenerator.makeIcon("Rent "+(price.floatValue())+"$/Hr");
+
+
                                         MarkerOptions options = new MarkerOptions()
                                                 .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                                .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
                                                 .title("For Rent")
                                                 .snippet(documentSnapshot.getId());
 
