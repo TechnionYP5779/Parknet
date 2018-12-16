@@ -1,13 +1,14 @@
 package com.team4.parknet.entities;
 
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class ParkingLotOffer {
-    String address;
+    GeoPoint address;
     float price;
     Date startTime;
     Date endTime;
@@ -19,7 +20,7 @@ public class ParkingLotOffer {
 
     }
 
-    public ParkingLotOffer(String owner, String address, float price, Date startTime, Date endTime) {
+    public ParkingLotOffer(String owner, GeoPoint address, float price, Date startTime, Date endTime) {
         this.owner = owner;
         this.address = address;
         this.price = price;
@@ -40,7 +41,7 @@ public class ParkingLotOffer {
         return (secs / 3600.0f);
     }
 
-    public String getAddress() {
+    public GeoPoint getAddress() {
         return address;
     }
 
@@ -48,7 +49,7 @@ public class ParkingLotOffer {
         return price;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(GeoPoint address) {
         this.address = address;
     }
 

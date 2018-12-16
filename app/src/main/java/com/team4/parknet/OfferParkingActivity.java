@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.android.gms.maps.model.LatLng;
 import com.team4.parknet.entities.ParkingLotOffer;
 
 import java.util.Calendar;
@@ -30,10 +32,11 @@ public class OfferParkingActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
-    private EditText mAddressInput;
+    //private EditText mAddressInput;
     private EditText mPriceInput;
     private Button mSendButton;
     private long time;
+    private LatLng mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +50,12 @@ public class OfferParkingActivity extends AppCompatActivity {
             finish();
         }
 
+        Bundle bundle = getIntent().getExtras();
+        mLocation = (LatLng) bundle.get("location");
+
         mFirestore = FirebaseFirestore.getInstance();
 
-        mAddressInput = findViewById(R.id.addressInput);
+        //mAddressInput = findViewById(R.id.addressInput);
         mPriceInput = findViewById(R.id.priceInput);
         mSendButton = findViewById(R.id.sendButton);
 
@@ -66,7 +72,8 @@ public class OfferParkingActivity extends AppCompatActivity {
         Date startTime = new Date();
         Date endTime = new Date(startTime.getTime() + 1000 * 3600 * 5);
 
-        ParkingLotOffer offer = new ParkingLotOffer(mAuth.getCurrentUser().getUid(), mAddressInput.getText().toString(),
+        ParkingLotOffer offer = new ParkingLotOffer(mAuth.getCurrentUser().getUid(),
+                new GeoPoint(mLocation.latitude, mLocation.longitude),
                 Float.parseFloat(mPriceInput.getText().toString()),
                 startTime, endTime);
 

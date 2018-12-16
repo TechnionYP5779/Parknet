@@ -41,7 +41,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         mOfferOfOrder = task.getResult().toObject(ParkingLotOffer.class);
-                        mAddressField.setText(mOfferOfOrder.getAddress());
+                        //mAddressField.setText(mOfferOfOrder.getAddress());
 
                         Float price = order.getTimesOrdered().size() * mOfferOfOrder.getPrice();
                         mPriceField.setText(price.toString());

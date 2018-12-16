@@ -71,8 +71,8 @@ public class OrderActivity extends AppCompatActivity {
                     if (document != null) {
                         mParkingLotOffer = task.getResult().toObject(ParkingLotOffer.class);
 
-                        mAddress = findViewById(R.id.address);
-                        mAddress.setText(mParkingLotOffer.getAddress());
+//                        mAddress = findViewById(R.id.address);
+//                        mAddress.setText(mParkingLotOffer.getAddress());
 
                         mPricePerHour = findViewById(R.id.pricePerHour);
                         mPricePerHour.setText(mParkingLotOffer.getPrice() + " $/Hr");

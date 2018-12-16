@@ -75,6 +75,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
     private static final int PLACE_PICKER_REQUEST = 1;
+    private static final int OFFER_PARKING_RETURN_CODE = 2;
 
     //widgets
     private AutoCompleteTextView mSearchText;
@@ -185,6 +186,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked gps icon");
                 getDeviceLocation();
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent i = new Intent(MapsActivity.this, OfferParkingActivity.class);
+                i.putExtra("location", mMarker.getPosition());
+                startActivityForResult(i, OFFER_PARKING_RETURN_CODE);
+                return true;
             }
         });
 

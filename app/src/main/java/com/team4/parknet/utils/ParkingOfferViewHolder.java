@@ -31,7 +31,7 @@ public class ParkingOfferViewHolder extends RecyclerView.ViewHolder
     }
 
     public void bind(@NonNull ParkingLotOffer offer, final OnBookClickCallBack cb){
-        mAddressField.setText(offer.getAddress());
+        //mAddressField.setText(offer.getAddress());
         mPriceField.setText(String.valueOf(offer.getPrice()) + " $/Hr");
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.ENGLISH);

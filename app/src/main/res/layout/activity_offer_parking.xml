@@ -7,14 +7,14 @@
     android:orientation="vertical"
     tools:context=".OfferParkingActivity">
 
-    <EditText
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:inputType="text"
-        android:id="@+id/addressInput"
-        android:hint="@string/addressHint"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content" />
+    <!--<EditText-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:inputType="text"-->
+        <!--android:id="@+id/addressInput"-->
+        <!--android:hint="@string/addressHint"-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="wrap_content" />-->
 
     <EditText
         android:layout_marginTop="20dp"
