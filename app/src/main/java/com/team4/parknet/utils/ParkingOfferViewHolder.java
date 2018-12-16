@@ -6,11 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.team4.parknet.OfferParkingActivity;
 import com.team4.parknet.R;
 import com.team4.parknet.entities.ParkingLotOffer;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

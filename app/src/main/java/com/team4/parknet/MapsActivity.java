@@ -20,14 +20,10 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.team4.parknet.models.PlaceInfo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -36,12 +32,13 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,13 +49,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.maps.android.data.Feature;
-import com.google.maps.android.data.Layer;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
-import com.google.maps.android.data.geojson.GeoJsonPoint;
-
-
-import org.json.JSONException;
+import com.team4.parknet.models.PlaceInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,33 +115,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        mSearchText = (AutoCompleteTextView) findViewById(R.id.input_search);
-        mGps = (ImageView) findViewById(R.id.ic_gps);
-        mInfo = (ImageView) findViewById(R.id.place_info);
-        mPlacePicker = (ImageView) findViewById(R.id.place_picker);
-        mControlLayer = (ImageView) findViewById(R.id.control_layer);
+        mSearchText = findViewById(R.id.input_search);
+        mGps = findViewById(R.id.ic_gps);
+        mInfo = findViewById(R.id.place_info);
+        mPlacePicker = findViewById(R.id.place_picker);
+        mControlLayer = findViewById(R.id.control_layer);
         getLocationPermission();
 
     }
 
-    private void init(){
+    private void init() {
         Log.d(TAG, "init: initializing");
-
-        try {
-            layer = new GeoJsonLayer(mMap, R.raw.map2,
-                    getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            addLayer();
-        } catch (IOException e) {
-            Log.e(TAG, "init: IOException: " + e.getMessage() );
-        } catch (JSONException e) {
-            Log.e(TAG, "init: JSONException: " + e.getMessage() );;
-        }
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -170,10 +146,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH ||
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                         actionId == EditorInfo.IME_ACTION_DONE ||
                         keyEvent.getAction() == KeyEvent.ACTION_DOWN ||
-                        keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+                        keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
                     geoLocate();
 
                 }
@@ -204,15 +180,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked place_info.");
 
-                try{
-                    if(mMarker.isInfoWindowShown()){
+                try {
+                    if (mMarker.isInfoWindowShown()) {
                         mMarker.hideInfoWindow();
-                    }else{
+                    } else {
                         Log.d(TAG, "onClick: place info: " + mPlace.toString());
                         mMarker.showInfoWindow();
                     }
-                }catch(NullPointerException e){
-                    Log.e(TAG, "onClick: NullPointerException: " + e.getMessage() );
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "onClick: NullPointerException: " + e.getMessage());
                 }
             }
         });
@@ -233,22 +209,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //startActivityForResult(intent, PLACE_PICKER_REQUEST);
 
                 } catch (GooglePlayServicesRepairableException e) {
-                    Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage() );
+                    Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage());
                 } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.e(TAG, "onClick: GooglePlayServicesNotAvailableException: " + e.getMessage() );
-                }
-            }
-        });
-
-        mControlLayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(is_displayed){
-                    layer.removeLayerFromMap();
-                    is_displayed = false;
-                }else{
-                    layer.addLayerToMap();
-                    is_displayed = true;
+                    Log.e(TAG, "onClick: GooglePlayServicesNotAvailableException: " + e.getMessage());
                 }
             }
         });
@@ -276,38 +239,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Geocoder geoCoder = new Geocoder(MapsActivity.this);
         List<Address> list = new ArrayList<>();
-        try{
+        try {
             list = geoCoder.getFromLocationName(searchString, 1);
-        }catch(IOException e){
-            Log.e(TAG, "geoLocate: IOException: "+e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
         }
 
-        if(list.size() > 0){
+        if (list.size() > 0) {
             Address address = list.get(0);
 
-            Log.d(TAG, "geoLocate: found a location: "+address.toString());
+            Log.d(TAG, "geoLocate: found a location: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
 
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
         }
     }
 
-    private void getDeviceLocation(){
+    private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the device's current location");
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        try{
-            if(mLocationPermissionsGranted){
+        try {
+            if (mLocationPermissionsGranted) {
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
 
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),DEFAULT_ZOOM, "My Location");
-                        }else{
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
+                        } else {
                             Log.d(TAG, "onComplete: current location is null.");
                             Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
@@ -315,21 +278,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
             }
 
-        }catch(SecurityException e){
+        } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: "+latLng.latitude+", lng: "+latLng.longitude);
+    private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         mMap.clear();
 
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapsActivity.this));
 
-        if(placeInfo != null){
-            try{
+        if (placeInfo != null) {
+            try {
                 String snippet = "Address: " + placeInfo.getAddress() + "\n" +
                         "Phone Number: " + placeInfo.getPhoneNumber() + "\n" +
                         "Website: " + placeInfo.getWebsiteUri() + "\n" +
@@ -341,21 +304,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .snippet(snippet);
 
                 mMarker = mMap.addMarker(markerOptions);
-            }catch(NullPointerException e){
-                Log.e(TAG, "moveCamera: NullPointerException: " + e.getMessage() );
+            } catch (NullPointerException e) {
+                Log.e(TAG, "moveCamera: NullPointerException: " + e.getMessage());
             }
-        }else{
+        } else {
             mMap.addMarker(new MarkerOptions().position(latLng));
         }
 
         hideSoftKeyboard();
     }
 
-    private void moveCamera(LatLng latLng, float zoom, String title){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: "+latLng.latitude+", lng: "+latLng.longitude);
+    private void moveCamera(LatLng latLng, float zoom, String title) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
-        if(!title.equals("My Location")){
+        if (!title.equals("My Location")) {
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
                     .title(title);
@@ -366,26 +329,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         hideSoftKeyboard();
     }
 
-    private void initMap(){
+    private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(MapsActivity.this);
     }
 
-    private void getLocationPermission(){
+    private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {FINE_LOCATION,
                 COARSE_LOCATION};
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(), COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionsGranted = true;
                 initMap();
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
-        }else{
+        } else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
 
@@ -396,9 +359,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "onRequestPermissionsResult: called.");
         mLocationPermissionsGranted = false;
 
-        switch(requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE:{
-                if(grantResults.length > 0){
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
                     for (int grantResult : grantResults) {
                         if (grantResult != PackageManager.PERMISSION_GRANTED) {
                             Log.d(TAG, "onRequestPermissionsResult: permission failed.");
@@ -415,7 +378,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void hideSoftKeyboard(){
+    private void hideSoftKeyboard() {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
@@ -442,14 +405,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(@NonNull PlaceBuffer places) {
-            if(!places.getStatus().isSuccess()){
-                Log.d(TAG, "onResult: Place query did not complete successfully: "+places.getStatus().toString());
+            if (!places.getStatus().isSuccess()) {
+                Log.d(TAG, "onResult: Place query did not complete successfully: " + places.getStatus().toString());
                 places.release();
                 return;
             }
             final Place place = places.get(0);
 
-            try{
+            try {
                 mPlace = new PlaceInfo();
                 mPlace.setName(place.getName().toString());
                 mPlace.setId(place.getId());
@@ -460,7 +423,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mPlace.setPhoneNumber(place.getPhoneNumber().toString());
                 mPlace.setAttributions(place.getAttributions().toString());
                 Log.d(TAG, "onResult: place details: " + mPlace.toString());
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 Log.e(TAG, "onResult: NullPointerException: " + e.getMessage());
             }
 
@@ -469,21 +432,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             places.release();
         }
     };
-
-    /*
-    -------------------- Add Layers -----------------------
-     */
-
-    private void addLayer() throws IOException, JSONException {
-        //layer.addLayerToMap();
-        //is_displayed = true;
-        layer.setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
-            @Override
-            public void onFeatureClick(Feature feature) {
-                //moveCamera(((GeoJsonPoint)feature.getGeometry()).getCoordinates(), DEFAULT_ZOOM, "test");
-                Toast.makeText(MapsActivity.this, "House Number: " + feature.getProperty("addr:housenumber"), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onFeatureClick: House Number: " + feature.getProperty("addr:housenumber"));
-            }
-        });
-    }
 }

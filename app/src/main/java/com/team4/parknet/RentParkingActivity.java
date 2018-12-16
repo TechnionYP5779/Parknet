@@ -1,12 +1,11 @@
 package com.team4.parknet;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +17,11 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.team4.parknet.entities.ParkingLotOffer;
-import com.team4.parknet.entities.TimeSlot;
 import com.team4.parknet.utils.ParkingOfferViewHolder;
 
 import java.util.Calendar;
@@ -155,7 +151,7 @@ public class RentParkingActivity extends AppCompatActivity {
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, String>() {
                     @Override
-                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                    public String then(@NonNull Task<HttpsCallableResult> task) {
                         // This continuation runs on either success or failure, but if the task
                         // has failed then getResult() will throw an Exception which will be
                         // propagated down.
@@ -172,7 +168,7 @@ public class RentParkingActivity extends AppCompatActivity {
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, Date>() {
                     @Override
-                    public Date then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                    public Date then(@NonNull Task<HttpsCallableResult> task) {
                         // This continuation runs on either success or failure, but if the task
                         // has failed then getResult() will throw an Exception which will be
                         // propagated down.

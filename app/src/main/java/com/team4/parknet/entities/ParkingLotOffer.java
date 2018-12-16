@@ -26,9 +26,9 @@ public class ParkingLotOffer {
         this.price = price;
         this.startTime = new Date(startTime.getTime() - startTime.getTime() % (3600 * 1000));
         this.endTime = new Date(endTime.getTime() - endTime.getTime() % (3600 * 1000));
-        int hours = (int)getDurationInHours();
+        int hours = (int) getDurationInHours();
         this.availability = new ArrayList<>(hours);
-        for (int i=0; i<hours; ++i) {
+        for (int i = 0; i < hours; ++i) {
             Date start = new Date(this.startTime.getTime() + 1000 * 3600 * i);
             Date end = new Date(start.getTime() + 1000 * 3600);
             this.availability.add(i, new TimeSlot(true, start, end));
@@ -45,51 +45,51 @@ public class ParkingLotOffer {
         return address;
     }
 
-    public float getPrice() {
-        return price;
-    }
-
     public void setAddress(GeoPoint address) {
         this.address = address;
+    }
+
+    public float getPrice() {
+        return price;
     }
 
     public void setPrice(float price) {
         this.price = price;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     public Date getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
     public Date getEndTime() {
         return endTime;
     }
 
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
     public String getOwner() {
         return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public List<TimeSlot> getAvailability() {
         return availability;
     }
 
-    public void setAvailable(int position, Boolean avail){
-        availability.get(position).setAvailable(avail);
-    }
-
     public void setAvailability(List<TimeSlot> availability) {
         this.availability = availability;
+    }
+
+    public void setAvailable(int position, Boolean avail) {
+        availability.get(position).setAvailable(avail);
     }
 }

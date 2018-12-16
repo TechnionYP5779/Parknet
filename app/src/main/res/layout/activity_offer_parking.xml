@@ -36,12 +36,14 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/chooseStartTime"
             android:layout_weight="1"
             android:hint="@string/chooseTime"
             android:layout_width="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/chooseStartDate"
             android:layout_weight="1"
             android:hint="@string/chooseDate"
             android:layout_width="wrap_content"
@@ -61,12 +63,14 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/chooseEndTime"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:hint="@string/chooseTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/chooseEndDate"
             android:layout_weight="1"
             android:hint="@string/chooseDate"
             android:layout_width="wrap_content"

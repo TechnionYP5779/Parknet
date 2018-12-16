@@ -7,7 +7,6 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
-
 import java.util.Calendar;
 
 public class MyTimePickerFragment extends DialogFragment {
@@ -35,6 +34,6 @@ public class MyTimePickerFragment extends DialogFragment {
             };
 
     public interface OnCallbackReceived {
-        public void UpdateTime(String startOrEnd, Integer hour);
+        void UpdateTime(String startOrEnd, Integer hour);
     }
 }

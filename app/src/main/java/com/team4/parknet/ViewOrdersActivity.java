@@ -1,9 +1,8 @@
 package com.team4.parknet;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,9 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.team4.parknet.entities.Order;
-import com.team4.parknet.entities.ParkingLotOffer;
 import com.team4.parknet.utils.OrderViewHolder;
-import com.team4.parknet.utils.ParkingOfferViewHolder;
 
 public class ViewOrdersActivity extends AppCompatActivity {
 

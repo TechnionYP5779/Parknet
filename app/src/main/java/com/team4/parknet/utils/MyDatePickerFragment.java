@@ -34,6 +34,6 @@ public class MyDatePickerFragment extends DialogFragment {
             };
 
     public interface OnCallbackReceived {
-        public void UpdateDate(String startOrEnd, Integer year, Integer month, Integer dayOfMonth);
+        void UpdateDate(String startOrEnd, Integer year, Integer month, Integer dayOfMonth);
     }
 }
