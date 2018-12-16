@@ -308,6 +308,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                     loc.getLongitude(), currLoc.getLongitude()) < RADIUS) {
                                                 IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
                                                 iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+                                                iconGenerator.setBackground(getResources().getDrawable(R.drawable.ic_local_offer_black_24dp));
+
                                                 iconGenerator.setRotation(90);
                                                 iconGenerator.setContentRotation(-90);
                                                 Bitmap iconBitmap = iconGenerator.makeIcon("Rent "+(price.floatValue())+"$/Hr");
@@ -412,9 +414,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         "Website: " + placeInfo.getWebsiteUri() + "\n" +
                         "Price Rating: " + placeInfo.getRating() + "\n";
 
+                IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
+                iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
+                iconGenerator.setRotation(90);
+                iconGenerator.setContentRotation(-90);
+                Bitmap iconBitmap = iconGenerator.makeIcon("Offer Your Parking Here");
+
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position(latLng)
                         .title("Offer")
+                        .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
                         .snippet(snippet);
 
                 mMarker = mMap.addMarker(markerOptions);
@@ -422,7 +431,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.e(TAG, "moveCamera: NullPointerException: " + e.getMessage());
             }
         } else {
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Offer"));
+            IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
+            iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
+            iconGenerator.setRotation(90);
+            iconGenerator.setContentRotation(-90);
+            Bitmap iconBitmap = iconGenerator.makeIcon("Offer Your Parking Here");
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Offer").icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)));
         }
 
         hideSoftKeyboard();
@@ -433,8 +447,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if (!title.equals("My Location")) {
+            IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
+            iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
+            iconGenerator.setRotation(90);
+            iconGenerator.setContentRotation(-90);
+            Bitmap iconBitmap = iconGenerator.makeIcon("Offer Your Parking Here");
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
+            .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
                     .title("Offer");
 
             mMap.addMarker(options);
