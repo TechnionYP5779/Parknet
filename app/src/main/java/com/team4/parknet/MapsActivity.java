@@ -83,7 +83,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int OFFER_PARKING_RETURN_CODE = 2;
     private static final int ORDER_RETURN_CODE = 3;
-    public static final int RADIUS = 10;
+    private static final Double DEFAULT_RADIUS = 10.0;
 
     //widgets
     private AutoCompleteTextView mSearchText;
@@ -293,14 +293,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 mMap.clear();
-                ShowNearbyAvailableParkings();
+                ShowNearbyAvailableParkings(DEFAULT_RADIUS);
             }
         });
 
         hideSoftKeyboard();
     }
 
-    private void ShowNearbyAvailableParkings() {
+    private void ShowNearbyAvailableParkings(final Double radius) {
         Query query = mFirestore.collection("offers");
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -313,6 +313,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Map<String, Object> data = new HashMap<>();
                         data.put("lat", currLoc.getLatitude());
                         data.put("long", currLoc.getLongitude());
+                        data.put("radius", radius);
                         availableNearby(data).addOnCompleteListener(new OnCompleteListener<Object>() {
                             @Override
                             public void onComplete(@NonNull Task<Object> task) {
@@ -360,7 +361,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         mMap.clear();
-        ShowNearbyAvailableParkings();
+        ShowNearbyAvailableParkings(DEFAULT_RADIUS);
     }
 
     private void geoLocate() {

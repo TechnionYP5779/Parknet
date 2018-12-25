@@ -29,6 +29,7 @@ admin.initializeApp(functions.config().firebase);
 
     const lat = data.lat
     const long = data.long
+    const radius = data.radius
 
     const res = []
     return admin.firestore().collection("offers").get().then((snap) => {
@@ -36,7 +37,7 @@ admin.initializeApp(functions.config().firebase);
             const availability = offer.get("availability")
             const qLocation = offer.get("address")
             const id = offer.id
-            if(calculateDistance(qLocation.latitude, lat, qLocation.longitude, long) < 10){
+            if(calculateDistance(qLocation.latitude, lat, qLocation.longitude, long) < radius){
                 let cnt = 0
                 availability.forEach(item => {
                     if (item.available === true && cnt === 0){
