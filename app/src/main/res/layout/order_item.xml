@@ -7,8 +7,8 @@
 
     <TextView
         android:textSize="20sp"
-        android:id="@+id/orderLocation"
-        android:text="Namir 10, Tel Aviv"
+        android:id="@+id/orderTime"
+        android:text="03/12/18 16:00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -17,7 +17,7 @@
         android:id="@+id/orderPrice"
         android:textSize="20sp"
         android:text="50.0 $"
-        android:layout_below="@id/orderLocation"
+        android:layout_below="@id/orderTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

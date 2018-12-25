@@ -16,18 +16,21 @@ import com.team4.parknet.R;
 import com.team4.parknet.entities.Order;
 import com.team4.parknet.entities.ParkingLotOffer;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import static android.support.constraint.Constraints.TAG;
 
 
 public class OrderViewHolder extends RecyclerView.ViewHolder {
-    private TextView mAddressField;
+    private TextView mTimeField;
     private TextView mPriceField;
     private Button mOrderDetailsBtn;
     private ParkingLotOffer mOfferOfOrder;
 
     public OrderViewHolder(@NonNull View itemView) {
         super(itemView);
-        mAddressField = itemView.findViewById(R.id.orderLocation);
+        mTimeField = itemView.findViewById(R.id.orderTime);
         mPriceField = itemView.findViewById(R.id.orderPrice);
         mOrderDetailsBtn = itemView.findViewById(R.id.orderDetailsBtn);
     }
@@ -41,10 +44,12 @@ public class OrderViewHolder extends RecyclerView.ViewHolder {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         mOfferOfOrder = task.getResult().toObject(ParkingLotOffer.class);
-                        //mAddressField.setText(mOfferOfOrder.getAddress());
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.ENGLISH);
+                        mTimeField.setText(sdf.format(mOfferOfOrder.getStartTime()));
 
                         Float price = order.getTimesOrdered().size() * mOfferOfOrder.getPrice();
-                        mPriceField.setText(price.toString());
+                        mPriceField.setText(price.toString() + "$");
                     } else {
                         Log.d(TAG, "No such document");
                     }
