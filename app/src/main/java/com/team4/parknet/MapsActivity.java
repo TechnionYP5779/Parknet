@@ -429,10 +429,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         "Price Rating: " + placeInfo.getRating() + "\n";
 
                 IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
-                iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
-                iconGenerator.setRotation(90);
-                iconGenerator.setContentRotation(-90);
-                Bitmap iconBitmap = iconGenerator.makeIcon("Offer Your Parking Here");
+                iconGenerator.setBackground(getResources().getDrawable(R.drawable.ic_add_circle_outline_black_24dp));
+                Bitmap iconBitmap = iconGenerator.makeIcon("");
 
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position(latLng)
@@ -446,10 +444,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } else {
             IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
-            iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
-            iconGenerator.setRotation(90);
-            iconGenerator.setContentRotation(-90);
-            Bitmap iconBitmap = iconGenerator.makeIcon("Offer Your Parking Here");
+            iconGenerator.setBackground(getResources().getDrawable(R.drawable.ic_add_circle_outline_black_24dp));
+            Bitmap iconBitmap = iconGenerator.makeIcon("");
             mMap.addMarker(new MarkerOptions().position(latLng).title("Offer").icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)));
         }
 
@@ -462,10 +458,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (!title.equals("My Location")) {
             IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
-            iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
-            iconGenerator.setRotation(90);
-            iconGenerator.setContentRotation(-90);
-            Bitmap iconBitmap = iconGenerator.makeIcon("Offer Your Parking Here");
+            iconGenerator.setBackground(getResources().getDrawable(R.drawable.ic_add_circle_outline_black_24dp));
+            Bitmap iconBitmap = iconGenerator.makeIcon("");
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
