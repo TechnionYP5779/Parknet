@@ -292,40 +292,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mControlLayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Query query = mFirestore.collection("offers");
-                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                mMap.clear();
+                ShowNearbyAvailableParkings();
+            }
+        });
+
+        hideSoftKeyboard();
+    }
+
+    private void ShowNearbyAvailableParkings() {
+        Query query = mFirestore.collection("offers");
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LocationServices.getFusedLocationProviderClient(MapsActivity.this).getLastLocation()
+                            .addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        LocationServices.getFusedLocationProviderClient(MapsActivity.this).getLastLocation()
-                                    .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    public void onComplete(@NonNull Task<Location> task) {
+                        Location currLoc = task.getResult();
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("lat", currLoc.getLatitude());
+                        data.put("long", currLoc.getLongitude());
+                        availableNearby(data).addOnCompleteListener(new OnCompleteListener<Object>() {
                             @Override
-                            public void onComplete(@NonNull Task<Location> task) {
-                                Location currLoc = task.getResult();
-                                Map<String, Object> data = new HashMap<>();
-                                data.put("lat", currLoc.getLatitude());
-                                data.put("long", currLoc.getLongitude());
-                                availableNearby(data).addOnCompleteListener(new OnCompleteListener<Object>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Object> task) {
-                                        if (task.isSuccessful()) {
-                                            List res = (List) task.getResult();
-                                            for (Object offer_obj : res) {
-                                                MarkerFromOffer(offer_obj);
-                                            }
-                                        } else {
-                                            Exception e = task.getException();
-                                            Log.d(TAG, "onComplete2: " + e.getMessage());
-                                        }
+                            public void onComplete(@NonNull Task<Object> task) {
+                                if (task.isSuccessful()) {
+                                    List res = (List) task.getResult();
+                                    for (Object offer_obj : res) {
+                                        MarkerFromOffer(offer_obj);
                                     }
-                                });
+                                } else {
+                                    Exception e = task.getException();
+                                    Log.d(TAG, "onComplete2: " + e.getMessage());
+                                }
                             }
                         });
                     }
                 });
             }
         });
-
-        hideSoftKeyboard();
     }
 
     private void MarkerFromOffer(Object offer_obj) {
@@ -354,6 +359,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
             }
         }
+        mMap.clear();
+        ShowNearbyAvailableParkings();
     }
 
     private void geoLocate() {
