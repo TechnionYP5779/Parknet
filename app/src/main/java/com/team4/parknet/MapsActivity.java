@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,23 +49,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
-import com.google.maps.android.ui.BubbleIconFactory;
 import com.google.maps.android.ui.IconGenerator;
+import com.team4.parknet.entities.ParkingLotOffer;
 import com.team4.parknet.models.PlaceInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
@@ -99,6 +101,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean is_displayed = false;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+    private FirebaseFunctions mFunctions;
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(@NonNull PlaceBuffer places) {
@@ -156,7 +159,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
 
-        mFirestore = FirebaseFirestore.getInstance();
 
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
@@ -183,8 +185,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mInfo = findViewById(R.id.place_info);
         mPlacePicker = findViewById(R.id.place_picker);
         mControlLayer = findViewById(R.id.control_layer);
+        mFunctions = FirebaseFunctions.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
         getLocationPermission();
-
     }
 
     private void init() {
@@ -294,45 +297,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            task.getResult().getDocuments().forEach(new Consumer<DocumentSnapshot>() {
-                                @Override
-                                public void accept(final DocumentSnapshot documentSnapshot) {
-                                    final GeoPoint loc = (GeoPoint) documentSnapshot.get("address");
-                                    final Double price = documentSnapshot.getDouble("price");
-                                    LocationServices.getFusedLocationProviderClient(MapsActivity.this).getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Location> task) {
-                                            Location currLoc = task.getResult();
-                                            if (calcDistance(loc.getLatitude(), currLoc.getLatitude(),
-                                                    loc.getLongitude(), currLoc.getLongitude()) < RADIUS) {
-                                                IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
-                                                iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
-                                                iconGenerator.setBackground(getResources().getDrawable(R.drawable.ic_local_offer_black_24dp));
-
-                                                iconGenerator.setRotation(90);
-                                                iconGenerator.setContentRotation(-90);
-                                                Bitmap iconBitmap = iconGenerator.makeIcon("Rent "+(price.floatValue())+"$/Hr");
-
-
-                                                MarkerOptions options = new MarkerOptions()
-                                                        .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                                                        .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
-                                                        .title("For Rent")
-                                                        .snippet(documentSnapshot.getId());
-
-                                                mMap.addMarker(options);
+                        LocationServices.getFusedLocationProviderClient(MapsActivity.this).getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                Location currLoc = task.getResult();
+                                Map<String, Object> data = new HashMap<>();
+                                data.put("lat", currLoc.getLatitude());
+                                data.put("long", currLoc.getLongitude());
+                                availableNearby(data).addOnCompleteListener(new OnCompleteListener<Object>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Object> task) {
+                                        if (task.isSuccessful()) {
+                                            List res = (List) task.getResult();
+                                            for (Object offer_obj : res) {
+                                                MarkerFromOffer(offer_obj);
+                                            }
+                                        } else {
+                                            Exception e = task.getException();
+                                            Log.d(TAG, "onComplete2: " + e.getMessage());
                                         }
-                                    }});
-                                }
-                            });
-                        }
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
         });
 
         hideSoftKeyboard();
+    }
+
+    private void MarkerFromOffer(Object offer_obj) {
+        final String id = (String)((HashMap)offer_obj).get("id");
+        ParkingLotOffer offer = ParkingLotOffer.buildFromDB(offer_obj);
+        IconGenerator iconGenerator = new IconGenerator(MapsActivity.this);
+        iconGenerator.setBackground(getResources().getDrawable(R.drawable.ic_lens_black_24dp));
+        Bitmap iconBitmap = iconGenerator.makeIcon(Float.valueOf(offer.getPrice()).toString() + "$");
+
+        MarkerOptions options = new MarkerOptions()
+                .position(new LatLng(offer.getAddress().getLatitude(), offer.getAddress().getLongitude()))
+                .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
+                .title("For Rent")
+                .snippet(id);
+        mMap.addMarker(options);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -454,7 +462,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Bitmap iconBitmap = iconGenerator.makeIcon("Offer Your Parking Here");
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
-            .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
+                    .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
                     .title("Offer");
 
             mMap.addMarker(options);
@@ -525,5 +533,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final double a = 0.5 - Math.cos((lat1 - lat2) * p) / 2 + Math.cos(lat2 * p) * Math.cos((lat1) * p) * (1 - Math.cos(((long1 - long2) * p))) / 2;
         double dis = (12742 * Math.asin(Math.sqrt(a)));
         return dis;
+    }
+
+    private Task<Object> availableNearby(Map<String, Object> data) {
+
+        return mFunctions
+                .getHttpsCallable("availableNearby")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, Object>() {
+                    @Override
+                    public Object then(@NonNull Task<HttpsCallableResult> task) {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        Object result = task.getResult().getData();
+                        return result;
+                    }
+                });
     }
 }

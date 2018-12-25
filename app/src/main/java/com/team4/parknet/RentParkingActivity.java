@@ -38,7 +38,6 @@ public class RentParkingActivity extends AppCompatActivity {
     FirestoreRecyclerAdapter adapter;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDb;
-    private FirebaseFunctions mFunctions;
 
     public static Date getDate(int year, int month, int day, int hour) {
         Calendar cal = Calendar.getInstance();
@@ -68,21 +67,11 @@ public class RentParkingActivity extends AppCompatActivity {
 
         mDb = FirebaseFirestore.getInstance();
 
-        mFunctions = FirebaseFunctions.getInstance();
-        //testCloudFunction();
-
         Bundle bundle = getIntent().getExtras();
         Date startDate = (Date) bundle.get("start-date");
         Date endDate = (Date) bundle.get("end-date");
         //String address = bundle.getString("address");
 
-        Map<String, Object> data = new HashMap<>();
-//        data.put("startDate", startDate);
-//        data.put("endDate", endDate);
-        data.put("lat", 32.7787175);
-        data.put("long", 35.01925390625);
-
-        testCloudFunction(data);
 //        This is some test to prove that we can query based on vacant timeslots
         Query query = mDb.collection("offers");
 
@@ -143,54 +132,4 @@ public class RentParkingActivity extends AppCompatActivity {
         adapter.stopListening();
     }
 
-    private Task<String> helloWorld() {
-        Map<String, Object> data = new HashMap<>();
-
-        return mFunctions
-                .getHttpsCallable("helloWorld")
-                .call(data)
-                .continueWith(new Continuation<HttpsCallableResult, String>() {
-                    @Override
-                    public String then(@NonNull Task<HttpsCallableResult> task) {
-                        // This continuation runs on either success or failure, but if the task
-                        // has failed then getResult() will throw an Exception which will be
-                        // propagated down.
-                        String result = (String) ((Map) task.getResult().getData()).get("text");
-                        return result;
-                    }
-                });
-    }
-
-    private Task<Object> queryTest(Map<String, Object> data) {
-
-        return mFunctions
-                .getHttpsCallable("queryTest")
-                .call(data)
-                .continueWith(new Continuation<HttpsCallableResult, Object>() {
-                    @Override
-                    public Object then(@NonNull Task<HttpsCallableResult> task) {
-                        // This continuation runs on either success or failure, but if the task
-                        // has failed then getResult() will throw an Exception which will be
-                        // propagated down.
-                        Object result = task.getResult().getData();
-                        return result;
-                    }
-                });
-    }
-
-
-    private void testCloudFunction(Map<String, Object> data) {
-        queryTest(data).addOnCompleteListener(new OnCompleteListener<Object>() {
-            @Override
-            public void onComplete(@NonNull Task<Object> task) {
-                if (task.isSuccessful()) {
-                    Object date = task.getResult();
-                    Log.d(TAG, "onComplete1: " + date.toString());
-                } else {
-                    Exception e = task.getException();
-                    Log.d(TAG, "onComplete2: " + e.getMessage());
-                }
-            }
-        });
-    }
 }

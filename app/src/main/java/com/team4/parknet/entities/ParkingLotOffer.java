@@ -5,6 +5,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class ParkingLotOffer {
@@ -81,6 +82,7 @@ public class ParkingLotOffer {
         this.owner = owner;
     }
 
+
     public List<TimeSlot> getAvailability() {
         return availability;
     }
@@ -91,5 +93,29 @@ public class ParkingLotOffer {
 
     public void setAvailable(int position, Boolean avail) {
         availability.get(position).setAvailable(avail);
+    }
+
+    public static ParkingLotOffer buildFromDB(Object offer){
+        final HashMap offer_data = (HashMap) ((HashMap)offer).get("data");
+        final Double loc_lat = (Double)((HashMap) ((HashMap) offer_data).get("address")).get("_latitude");
+        final Double loc_lon = (Double)((HashMap) ((HashMap) offer_data).get("address")).get("_longitude");
+        final Object price_obj = ((HashMap) offer_data).get("price");
+        final Float price =  price_obj instanceof Integer ? Float.valueOf((Integer)price_obj) : Float.valueOf(((Double)price_obj).floatValue());
+        final String owner = (String)((HashMap)offer_data).get("owner");
+        final Date startTime = new Date(); //TODO: FIX!!!!
+        final Date endTime = new Date(); //TODO: FIX!!!!
+        final List<TimeSlot> avail = new ArrayList<>();
+        final List<Object> l = (List<Object>)((HashMap) offer_data).get("availability");
+
+        for(Object o : l){
+            final Boolean available= (Boolean)((HashMap)o).get("available");
+            avail.add(new TimeSlot(available, new Date(), new Date())); //TODO: FIX!!!!
+        }
+
+
+        ParkingLotOffer offer_to_ret =  new ParkingLotOffer(owner, new GeoPoint(loc_lat, loc_lon), price, startTime, endTime);
+        offer_to_ret.setAvailability(avail);
+
+        return offer_to_ret;
     }
 }
