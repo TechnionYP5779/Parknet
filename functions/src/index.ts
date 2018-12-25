@@ -19,7 +19,7 @@ admin.initializeApp(functions.config().firebase);
     return dis
   });
   
-  export const availableNearby = functions.https.onCall((data, context) => {
+  export const availableNearby = functions.https.onCall(async (data, context) => {
     // Checking that the user is authenticated.
     if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
@@ -32,7 +32,8 @@ admin.initializeApp(functions.config().firebase);
     const radius = data.radius
 
     const res = []
-    return admin.firestore().collection("offers").get().then((snap) => {
+    try{
+        const snap = await admin.firestore().collection("offers").get()
         snap.forEach((offer) => {
             const availability = offer.get("availability")
             const qLocation = offer.get("address")
@@ -46,8 +47,12 @@ admin.initializeApp(functions.config().firebase);
                     }
                 })
             }
-        })
+        });
         return res
-    }).catch(err => console.log("fail"))
+    }
+    catch(err){
+        console.log(err)
+        return {error: err}
+    }
   });
 

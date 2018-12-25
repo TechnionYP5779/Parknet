@@ -84,6 +84,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int OFFER_PARKING_RETURN_CODE = 2;
     private static final int ORDER_RETURN_CODE = 3;
     private static final Double DEFAULT_RADIUS = 10.0;
+    private static final int VIEW_ORDERS_RETURN_CODE = 4;
 
     //widgets
     private AutoCompleteTextView mSearchText;
@@ -252,18 +253,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked place_info.");
-
-                try {
-                    if (mMarker.isInfoWindowShown()) {
-                        mMarker.hideInfoWindow();
-                    } else {
-                        Log.d(TAG, "onClick: place info: " + mPlace.toString());
-                        mMarker.showInfoWindow();
-                    }
-                } catch (NullPointerException e) {
-                    Log.e(TAG, "onClick: NullPointerException: " + e.getMessage());
-                }
+                Intent i = new Intent(MapsActivity.this, ViewOrdersActivity.class);
+                startActivityForResult(i, VIEW_ORDERS_RETURN_CODE);
             }
         });
 
