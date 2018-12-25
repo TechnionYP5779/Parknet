@@ -280,7 +280,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .setFilter(typeFilter)
                             .build(MapsActivity.this);
                     startActivityForResult(builder.build(MapsActivity.this), PLACE_PICKER_REQUEST);
-                    //startActivityForResult(intent, PLACE_PICKER_REQUEST);
 
                 } catch (GooglePlayServicesRepairableException e) {
                     Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage());
@@ -297,7 +296,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        LocationServices.getFusedLocationProviderClient(MapsActivity.this).getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                        LocationServices.getFusedLocationProviderClient(MapsActivity.this).getLastLocation()
+                                    .addOnCompleteListener(new OnCompleteListener<Location>() {
                             @Override
                             public void onComplete(@NonNull Task<Location> task) {
                                 Location currLoc = task.getResult();
@@ -373,7 +373,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Address address = list.get(0);
 
             Log.d(TAG, "geoLocate: found a location: " + address.toString());
-            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
 
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
         }
@@ -526,13 +525,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void hideSoftKeyboard() {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    }
-
-    private double calcDistance(double lat1, double lat2, double long1, double long2) {
-        final double p = 0.017453292519943295;
-        final double a = 0.5 - Math.cos((lat1 - lat2) * p) / 2 + Math.cos(lat2 * p) * Math.cos((lat1) * p) * (1 - Math.cos(((long1 - long2) * p))) / 2;
-        double dis = (12742 * Math.asin(Math.sqrt(a)));
-        return dis;
     }
 
     private Task<Object> availableNearby(Map<String, Object> data) {
