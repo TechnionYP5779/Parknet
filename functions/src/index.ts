@@ -33,10 +33,17 @@ admin.initializeApp(functions.config().firebase);
     const res = []
     return admin.firestore().collection("offers").get().then((snap) => {
         snap.forEach((offer) => {
+            const availability = offer.get("availability")
             const qLocation = offer.get("address")
             const id = offer.id
             if(calculateDistance(qLocation.latitude, lat, qLocation.longitude, long) < 10){
-                res.push({id: id, data: offer.data()})
+                let cnt = 0
+                availability.forEach(item => {
+                    if (item.available === true && cnt === 0){
+                        res.push({id: id, data: offer.data()})
+                        cnt = cnt + 1
+                    }
+                })
             }
         })
         return res
